@@ -8,17 +8,35 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Start screen with instructions -->
+  <div id="start-overlay">
+    <div class="overlay-card">
+      <h1>Bible Guesser</h1>
+      <p class="tagline">Like GeoGuessr &mdash; but for the Bible.</p>
+      <ol>
+        <li>You'll see a <strong>verse</strong> describing a real event.</li>
+        <li><strong>Click the map</strong> where you think it happened.</li>
+        <li>Press <strong>Confirm</strong> before the timer runs out.</li>
+        <li>The closer your guess, the more points &mdash; up to 5000.</li>
+        <li>5 rounds. Beat your best total!</li>
+      </ol>
+      <p class="hint">A beep warns you in the last 5 seconds. Run out of time with no guess and it's 0 points!</p>
+      <button id="go-btn" disabled>Loading...</button>
+    </div>
+  </div>
+
   <header>
     <h1>Bible Guesser</h1>
     <div id="status">
       <span id="round-label">Round 1 / 5</span>
+      <span id="timer-label">&#9201; 30s</span>
       <span id="score-label">Score: 0</span>
     </div>
   </header>
 
   <main>
     <section id="verse-panel">
-      <p id="verse-text">Loading verses...</p>
+      <p id="verse-text">Press Go to start.</p>
       <p id="verse-ref"></p>
       <button id="confirm-btn" disabled>Confirm guess</button>
       <div id="result"></div>

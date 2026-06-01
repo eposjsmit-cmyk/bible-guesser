@@ -1,6 +1,7 @@
 // Bible Guesser - game logic
 
 const ROUNDS = 5;
+const ROUND_SECONDS = 30;   // time limit per round
 
 let verses = [];
 let deck = [];          // shuffled subset for this game
@@ -10,7 +11,10 @@ let current = null;     // current verse
 let guessMarker = null;
 let answerMarker = null;
 let line = null;
-let locked = false;     // true once a guess is confirmed
+let locked = false;     // true once a guess is confirmed / time is up
+
+let timeLeft = ROUND_SECONDS;
+let timerId = null;
 
 // ---- Map setup ----
 const map = L.map('map', { worldCopyJump: true }).setView([31.5, 35.5], 5);
@@ -29,6 +33,40 @@ const nextBtn    = document.getElementById('next-btn');
 const resultBox  = document.getElementById('result');
 const roundLabel = document.getElementById('round-label');
 const scoreLabel = document.getElementById('score-label');
+const timerLabel = document.getElementById('timer-label');
+const startOverlay = document.getElementById('start-overlay');
+const goBtn      = document.getElementById('go-btn');
+
+// ---- Sound (Web Audio API - no sound files needed) ----
+let audioCtx = null;
+function initAudio() {
+  // Must be created after a user gesture (the Go click) or browsers block it.
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+function beep(freq = 440, duration = 0.12, type = 'square', vol = 0.18) {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) { /* ignore */ }
+}
+function timeoutBuzz() {
+  // a lower, longer two-tone buzz to signal "time's up"
+  beep(200, 0.25, 'sawtooth', 0.25);
+  setTimeout(() => beep(140, 0.4, 'sawtooth', 0.25), 180);
+}
 
 // ---- Helpers ----
 function shuffle(arr) {
@@ -56,6 +94,32 @@ function scoreFor(distanceKm) {
   return Math.round(5000 * Math.exp(-distanceKm / 1000));
 }
 
+// ---- Timer ----
+function updateTimerLabel() {
+  timerLabel.innerHTML = `&#9201; ${timeLeft}s`;
+  timerLabel.classList.toggle('low', timeLeft <= 10);
+}
+
+function startTimer() {
+  clearInterval(timerId);
+  timeLeft = ROUND_SECONDS;
+  updateTimerLabel();
+  timerId = setInterval(() => {
+    timeLeft--;
+    updateTimerLabel();
+    if (timeLeft <= 5 && timeLeft > 0) beep(700, 0.09, 'square', 0.15);
+    if (timeLeft <= 0) {
+      clearInterval(timerId);
+      timeUp();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerId);
+  timerId = null;
+}
+
 // ---- Game flow ----
 function startRound() {
   locked = false;
@@ -76,6 +140,7 @@ function startRound() {
   guessMarker = answerMarker = line = null;
 
   map.setView([31.5, 35.5], 5);
+  startTimer();
 }
 
 map.on('click', e => {
@@ -85,35 +150,54 @@ map.on('click', e => {
   confirmBtn.disabled = false;
 });
 
-confirmBtn.addEventListener('click', () => {
-  if (!guessMarker || locked) return;
+// Finish the current round. `g` is the guess LatLng, or null if time ran out
+// with no guess placed.
+function finishRound(g) {
+  if (locked) return;
   locked = true;
+  stopTimer();
   confirmBtn.disabled = true;
 
-  const g = guessMarker.getLatLng();
-  const distance = haversine(g.lat, g.lng, current.lat, current.lon);
-  const points = scoreFor(distance);
+  let points = 0;
+  answerMarker = L.marker([current.lat, current.lon], { title: current.place })
+    .addTo(map)
+    .bindPopup(`<b>${current.place}</b><br>${current.event}`)
+    .openPopup();
+
+  if (g) {
+    const distance = haversine(g.lat, g.lng, current.lat, current.lon);
+    points = scoreFor(distance);
+    line = L.polyline([[g.lat, g.lng], [current.lat, current.lon]], {
+      color: '#8a5a2b', dashArray: '6 6'
+    }).addTo(map);
+    map.fitBounds(line.getBounds().pad(0.4));
+    resultBox.innerHTML =
+      `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
+      `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
+      `<p>+<span class="points">${points}</span> points</p>`;
+  } else {
+    map.setView([current.lat, current.lon], 6);
+    resultBox.innerHTML =
+      `<p><strong>Time's up!</strong> No guess placed.</p>` +
+      `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
+      `<p>+<span class="points">0</span> points</p>`;
+  }
+
   totalScore += points;
-
-  // show the true location and connect with a line
-  answerMarker = L.marker([current.lat, current.lon], {
-    title: current.place
-  }).addTo(map);
-  answerMarker.bindPopup(`<b>${current.place}</b><br>${current.event}`).openPopup();
-
-  line = L.polyline([[g.lat, g.lng], [current.lat, current.lon]], {
-    color: '#8a5a2b', dashArray: '6 6'
-  }).addTo(map);
-  map.fitBounds(line.getBounds().pad(0.4));
-
-  resultBox.innerHTML =
-    `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
-    `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
-    `<p>+<span class="points">${points}</span> points</p>`;
-
   scoreLabel.textContent = `Score: ${totalScore}`;
   nextBtn.classList.remove('hidden');
   confirmBtn.classList.add('hidden');
+}
+
+function timeUp() {
+  if (locked) return;
+  timeoutBuzz();
+  finishRound(guessMarker ? guessMarker.getLatLng() : null);
+}
+
+confirmBtn.addEventListener('click', () => {
+  if (!guessMarker || locked) return;
+  finishRound(guessMarker.getLatLng());
 });
 
 // Single click handler for the Next button. Behaviour depends on game state:
@@ -137,6 +221,9 @@ nextBtn.onclick = () => {
 };
 
 function endGame() {
+  stopTimer();
+  timerLabel.innerHTML = '&#9201; --';
+  timerLabel.classList.remove('low');
   verseText.textContent = 'Game over!';
   verseRef.textContent = '';
   resultBox.innerHTML =
@@ -153,18 +240,27 @@ function newGame() {
   startRound();
 }
 
+// ---- Start button ----
+goBtn.addEventListener('click', () => {
+  initAudio();                 // unlock sound on this user gesture
+  startOverlay.classList.add('hidden');
+  newGame();
+});
+
 // ---- Load data ----
 fetch('verses.json')
   .then(r => r.json())
   .then(data => {
     verses = data;
     if (verses.length < ROUNDS) {
-      verseText.textContent = `Need at least ${ROUNDS} verses in verses.json.`;
+      goBtn.textContent = `Need ${ROUNDS}+ verses`;
       return;
     }
-    newGame();
+    goBtn.disabled = false;
+    goBtn.textContent = 'Go';
   })
   .catch(() => {
+    goBtn.textContent = 'Failed to load verses';
     verseText.textContent =
       'Could not load verses.json. Run a local server (see README) and reload.';
   });
