@@ -22,10 +22,19 @@ let timerId = null;
 
 // ---- Map ----
 const map = L.map('map', { worldCopyJump: true }).setView([31.5, 35.5], 5);
+
+// Guessing layer: physical relief with NO place labels (no cheating)
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
   maxZoom: 8
 }).addTo(map);
+
+// Reveal layer: National Geographic atlas style WITH borders, regions and
+// place names. Added only when the true location is shown, removed each round.
+const bibleLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri &mdash; National Geographic, DeLorme, HERE, UNEP-WCMC',
+  maxZoom: 16
+});
 
 // ---- DOM ----
 const verseText    = document.getElementById('verse-text');
@@ -42,6 +51,11 @@ const startOverlay = document.getElementById('start-overlay');
 const goBtn        = document.getElementById('go-btn');
 const nameInput    = document.getElementById('player-name');
 const leaderboard  = document.getElementById('leaderboard');
+const lbModal      = document.getElementById('lb-modal');
+const lbModalBody  = document.getElementById('lb-modal-body');
+const lbFab        = document.getElementById('lb-fab');
+const lbCloseBtn   = document.getElementById('lb-close');
+const lbOpenStart  = document.getElementById('lb-open-start');
 
 const CLOCK_CIRC = 2 * Math.PI * 16;   // circumference of the clock ring (r = 16)
 
@@ -145,32 +159,43 @@ async function fetchLeaderboard() {
   } catch (e) { return null; }
 }
 
-function renderLeaderboard(rows, myScore) {
+// Build the leaderboard table HTML. `highlightScore` (optional) highlights the
+// player's just-played row.
+function leaderboardTableHTML(rows, highlightScore) {
   if (!rows || rows.length === 0) {
-    leaderboard.innerHTML = '<p class="lb-empty">No scores yet — you\'re first!</p>';
-    leaderboard.classList.remove('hidden');
-    return;
+    return '<p class="lb-empty">No scores yet — be the first!</p>';
   }
   const rowsHtml = rows.map((r, i) => {
-    const mine = r.score === myScore && r.name === playerName;
+    const mine = highlightScore != null && r.score === highlightScore && r.name === playerName;
     return `<tr class="${mine ? 'lb-me' : ''}">
       <td>${i + 1}</td>
       <td>${escHtml(r.name)}</td>
       <td>${r.score}</td>
     </tr>`;
   }).join('');
-  leaderboard.innerHTML = `
-    <h3>Top 10</h3>
-    <table class="lb-table">
+  return `<table class="lb-table">
       <thead><tr><th>#</th><th>Name</th><th>Score</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>`;
+}
+
+function renderLeaderboard(rows, myScore) {
+  leaderboard.innerHTML = '<h3>Top 10</h3>' + leaderboardTableHTML(rows, myScore);
   leaderboard.classList.remove('hidden');
 }
 
 function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+// ---- Leaderboard modal (viewable any time) ----
+async function openLeaderboardModal() {
+  lbModal.classList.remove('hidden');
+  lbModalBody.innerHTML = '<p class="lb-loading">Loading...</p>';
+  const rows = await fetchLeaderboard();
+  lbModalBody.innerHTML = leaderboardTableHTML(rows, null);
+}
+function closeLeaderboardModal() { lbModal.classList.add('hidden'); }
 
 // ---- Timer / clock ----
 function updateClock() {
@@ -221,6 +246,9 @@ function startRound() {
   [guessMarker, answerMarker, line].forEach(l => { if (l) map.removeLayer(l); });
   guessMarker = answerMarker = line = null;
 
+  // back to the no-label physical map for guessing
+  if (map.hasLayer(bibleLayer)) map.removeLayer(bibleLayer);
+
   map.setView([31.5, 35.5], 5);
   startTimer();
 }
@@ -239,10 +267,14 @@ function finishRound(g) {
   confirmBtn.disabled = true;
 
   let points = 0;
+  // reveal the labeled Bible-era atlas map (borders, regions, place names)
+  bibleLayer.addTo(map);
   answerMarker = L.marker([current.lat, current.lon], { title: current.place })
     .addTo(map)
-    .bindPopup(`<b>${current.place}</b><br>${current.event}`)
+    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>`)
     .openPopup();
+
+  const eraLine = `<p class="era">When: <strong>${current.era}</strong></p>`;
 
   if (g) {
     const distance = haversine(g.lat, g.lng, current.lat, current.lon);
@@ -253,6 +285,7 @@ function finishRound(g) {
     map.fitBounds(line.getBounds().pad(0.4));
     resultBox.innerHTML =
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
+      eraLine +
       `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
       `<p>+<span class="points" id="round-points">0</span> points</p>`;
   } else {
@@ -260,6 +293,7 @@ function finishRound(g) {
     resultBox.innerHTML =
       `<p><strong>Time's up!</strong> No guess placed.</p>` +
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
+      eraLine +
       `<p>+<span class="points" id="round-points">0</span> points</p>`;
   }
 
@@ -336,6 +370,14 @@ function newGame() {
   deck = shuffle(verses).slice(0, ROUNDS);
   startRound();
 }
+
+// ---- Leaderboard modal wiring ----
+if (lbFab)       lbFab.addEventListener('click', openLeaderboardModal);
+if (lbOpenStart) lbOpenStart.addEventListener('click', openLeaderboardModal);
+if (lbCloseBtn)  lbCloseBtn.addEventListener('click', closeLeaderboardModal);
+if (lbModal)     lbModal.addEventListener('click', e => {
+  if (e.target === lbModal) closeLeaderboardModal();   // click backdrop to close
+});
 
 // ---- Start screen ----
 const NAME_KEY = 'bibleGuesser_playerName';

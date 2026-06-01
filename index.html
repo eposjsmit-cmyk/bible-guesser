@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -26,8 +26,21 @@
         <input id="player-name" type="text" maxlength="24" placeholder="e.g. Johan" autocomplete="off" />
       </div>
       <button id="go-btn" disabled>Loading...</button>
+      <button id="lb-open-start" class="secondary">&#127942; View Leaderboard</button>
     </div>
   </div>
+
+  <!-- Leaderboard modal (open any time) -->
+  <div id="lb-modal" class="modal hidden">
+    <div class="modal-card">
+      <h2>&#127942; Leaderboard</h2>
+      <div id="lb-modal-body"></div>
+      <button id="lb-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Floating leaderboard button during play -->
+  <button id="lb-fab" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
 
   <header>
     <h1>Bible Guesser</h1>
@@ -58,6 +71,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=4"></script>
+  <script src="game.js?v=5"></script>
 </body>
 </html>

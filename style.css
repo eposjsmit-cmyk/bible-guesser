@@ -164,6 +164,62 @@ button:hover:not(:disabled) { background: #5e4622; }
 .lb-loading, .lb-empty { color: #8a5a2b; font-style: italic; }
 .new-best { color: #2e6b3b; font-weight: bold; }
 .pb-line { color: #6b5d45; }
+#result .era { color: #6b5d45; }
+#result .era strong { color: #3b2f1e; }
+
+/* ---- Secondary button (start screen) ---- */
+button.secondary {
+  background: transparent;
+  color: #7a5c2e;
+  border: 2px solid #7a5c2e;
+  margin-top: 0.6rem;
+  width: 100%;
+}
+button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
+
+/* ---- Floating leaderboard button ---- */
+#lb-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 500;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Leaderboard modal ---- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(43, 35, 25, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal.hidden { display: none; }
+.modal-card {
+  background: #fbf8f1;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+.modal-card h2 { margin: 0 0 1rem; color: #3b2f1e; }
+.modal-card .lb-table { text-align: left; }
+#lb-close { margin-top: 1.2rem; }
 
 /* ================= Mobile / phone layout ================= */
 @media (max-width: 700px) {
