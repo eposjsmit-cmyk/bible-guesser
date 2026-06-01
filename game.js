@@ -20,6 +20,9 @@ let playerName = '';
 let timeLeft = ROUND_SECONDS;
 let timerId = null;
 
+const BETWEEN_SECONDS = 5;   // pause between screens before auto-advancing
+let autoId = null;
+
 // ---- Map ----
 const map = L.map('map', { worldCopyJump: true }).setView([31.5, 35.5], 5);
 
@@ -56,6 +59,7 @@ const lbModalBody  = document.getElementById('lb-modal-body');
 const lbFab        = document.getElementById('lb-fab');
 const lbCloseBtn   = document.getElementById('lb-close');
 const lbOpenStart  = document.getElementById('lb-open-start');
+const musicBtn     = document.getElementById('music-btn');
 
 const CLOCK_CIRC = 2 * Math.PI * 16;   // circumference of the clock ring (r = 16)
 
@@ -121,8 +125,69 @@ function sfxFanfare() {
   playMelody([[523, 0.14], [659, 0.14], [784, 0.14], [1047, 0.26]], 140, 'triangle', 0.22);
 }
 
-// Gentle two-note flourish at game over (no new best)
-function sfxGameOver() { playMelody([[440, 0.16], [330, 0.22]], 160, 'sine', 0.18); }
+// Gentle two-note flourish at game over
+function sfxGameOver() { playMelody([[523, 0.16], [659, 0.16], [784, 0.24]], 150, 'sine', 0.2); }
+
+// ---- Background music (gentle generative ambient loop) ----
+const MUSIC_KEY = 'bibleGuesser_music';
+let musicOn = localStorage.getItem(MUSIC_KEY) !== '0';   // default on
+let musicTimer = null;
+let musicBus = null;
+// a calm progression (C - G - Am - F), low register triads
+const MUSIC_CHORDS = [
+  [261.63, 329.63, 392.00],
+  [196.00, 246.94, 293.66],
+  [220.00, 261.63, 329.63],
+  [174.61, 220.00, 261.63]
+];
+let chordIndex = 0;
+
+function playPad(freqs) {
+  if (!audioCtx || !musicBus) return;
+  const t = audioCtx.currentTime;
+  freqs.forEach(f => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.5, t + 1.4);     // slow swell
+    g.gain.linearRampToValueAtTime(0.0001, t + 4.2);  // slow fade
+    osc.connect(g);
+    g.connect(musicBus);
+    osc.start(t);
+    osc.stop(t + 4.4);
+  });
+}
+
+function startMusic() {
+  if (!audioCtx || musicTimer) return;
+  musicBus = audioCtx.createGain();
+  musicBus.gain.value = 0.07;                 // quiet, sits under the sfx
+  const lp = audioCtx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 850;                    // warm, mellow
+  musicBus.connect(lp);
+  lp.connect(audioCtx.destination);
+  playPad(MUSIC_CHORDS[chordIndex]);
+  chordIndex = (chordIndex + 1) % MUSIC_CHORDS.length;
+  musicTimer = setInterval(() => {
+    playPad(MUSIC_CHORDS[chordIndex]);
+    chordIndex = (chordIndex + 1) % MUSIC_CHORDS.length;
+  }, 4000);
+}
+
+function stopMusic() {
+  if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+  if (musicBus) { try { musicBus.disconnect(); } catch (e) {} musicBus = null; }
+}
+
+function setMusic(on) {
+  musicOn = on;
+  localStorage.setItem(MUSIC_KEY, on ? '1' : '0');
+  if (musicBtn) musicBtn.textContent = on ? '♫' : '🔇';  // ♫ / 🔇
+  if (on) { initAudio(); startMusic(); } else { stopMusic(); }
+}
 
 // ---- Helpers ----
 function shuffle(arr) {
@@ -146,7 +211,8 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 function scoreFor(distanceKm) {
-  return Math.round(5000 * Math.exp(-distanceKm / 1000));
+  // Tighter falloff: you need to be closer to score big (was /1000)
+  return Math.round(5000 * Math.exp(-distanceKm / 600));
 }
 
 // ---- Personal best ----
@@ -254,6 +320,7 @@ function stopTimer() { clearInterval(timerId); timerId = null; }
 // ---- Game flow ----
 function startRound() {
   locked = false;
+  clearAuto();
   current = deck[roundIndex];
 
   verseText.textContent = '"' + current.text + '"';
@@ -336,6 +403,33 @@ function finishRound(g) {
 
   nextBtn.classList.remove('hidden');
   confirmBtn.classList.add('hidden');
+
+  startAutoAdvance();
+}
+
+// Auto-advance to the next screen after a short pause, with a countdown on
+// the button. The player can also tap the button to skip the wait.
+function startAutoAdvance() {
+  clearAuto();
+  const isLast = roundIndex >= ROUNDS - 1;
+  const label = isLast ? 'See results' : 'Next round';
+  let remaining = BETWEEN_SECONDS;
+  nextBtn.textContent = `${label} (${remaining})`;
+  autoId = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) advance();
+    else nextBtn.textContent = `${label} (${remaining})`;
+  }, 1000);
+}
+
+function clearAuto() {
+  if (autoId) { clearInterval(autoId); autoId = null; }
+}
+
+function advance() {
+  clearAuto();
+  roundIndex++;
+  if (roundIndex < ROUNDS) startRound(); else endGame();
 }
 
 function timeUp() {
@@ -356,12 +450,12 @@ nextBtn.onclick = () => {
     newGame();
     return;
   }
-  roundIndex++;
-  if (roundIndex < ROUNDS) startRound(); else endGame();
+  advance();   // skip the countdown
 };
 
 async function endGame() {
   stopTimer();
+  clearAuto();
   // reset the clock to empty
   if (clockNum) clockNum.textContent = '0';
   if (clockFg) clockFg.style.strokeDashoffset = CLOCK_CIRC;
@@ -371,19 +465,16 @@ async function endGame() {
 
   const prevBest = getPersonalBest();
   savePersonalBest(totalScore);
-  const isNewBest = totalScore > prevBest;
 
   resultBox.innerHTML =
     `<p>Final score: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
-    (isNewBest
-      ? `<p class="new-best">New personal best!</p>`
-      : prevBest > 0 ? `<p class="pb-line">Personal best: ${prevBest}</p>` : '');
+    (prevBest > 0 ? `<p class="pb-line">Best: ${Math.max(prevBest, totalScore)}</p>` : '');
 
   const fs = document.getElementById('final-score');
   if (fs) animateCount(fs, 0, totalScore, '', 1000);
 
-  // celebratory sound after the count-up settles
-  setTimeout(() => { if (isNewBest) sfxFanfare(); else sfxGameOver(); }, 1050);
+  // gentle closing flourish after the count-up settles
+  setTimeout(() => sfxGameOver(), 1050);
 
   nextBtn.textContent = 'Play again';
   nextBtn.dataset.mode = 'restart';
@@ -412,6 +503,12 @@ if (lbModal)     lbModal.addEventListener('click', e => {
   if (e.target === lbModal) closeLeaderboardModal();   // click backdrop to close
 });
 
+// ---- Music toggle ----
+if (musicBtn) {
+  musicBtn.textContent = musicOn ? '♫' : '🔇';  // ♫ / 🔇
+  musicBtn.addEventListener('click', () => setMusic(!musicOn));
+}
+
 // ---- Start screen ----
 const NAME_KEY = 'bibleGuesser_playerName';
 nameInput.value = localStorage.getItem(NAME_KEY) || '';
@@ -434,6 +531,7 @@ goBtn.addEventListener('click', () => {
   playerName = name;
   localStorage.setItem(NAME_KEY, name);
   initAudio();
+  if (musicOn) startMusic();   // start the chilled background loop
   startOverlay.style.display = 'none';
   newGame();
   // map container size may have settled now the overlay is gone

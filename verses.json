@@ -673,5 +673,284 @@
     "era": "c. AD 50",
     "lat": 38.9197,
     "lon": 27.8403
+  },
+  {
+    "ref": "1 Samuel 24:3-4",
+    "text": "And he came to the sheepcotes by the way... And the men of David said unto him, Behold the day... And David arose, and cut off the skirt of Saul's robe privily.",
+    "event": "David spares Saul's life in the cave",
+    "place": "En-gedi",
+    "era": "c. 1012 BC",
+    "lat": 31.4614,
+    "lon": 35.3924
+  },
+  {
+    "ref": "1 Samuel 6:13",
+    "text": "And they of Bethshemesh were reaping their wheat harvest in the valley: and they lifted up their eyes, and saw the ark, and rejoiced to see it.",
+    "event": "The ark of the covenant returns to Israel",
+    "place": "Beth-shemesh",
+    "era": "c. 1080 BC",
+    "lat": 31.7656,
+    "lon": 34.9756
+  },
+  {
+    "ref": "2 Samuel 11:17",
+    "text": "And the men of the city went out, and fought with Joab... and Uriah the Hittite died also.",
+    "event": "Uriah the Hittite falls in battle",
+    "place": "Rabbah of Ammon",
+    "era": "c. 990 BC",
+    "lat": 31.9516,
+    "lon": 35.9239
+  },
+  {
+    "ref": "1 Kings 22:34-35",
+    "text": "And a certain man drew a bow at a venture, and smote the king of Israel between the joints of the harness... and the king died at even.",
+    "event": "King Ahab dies in battle",
+    "place": "Ramoth-gilead",
+    "era": "c. 853 BC",
+    "lat": 32.56,
+    "lon": 35.99
+  },
+  {
+    "ref": "Joshua 11:10-11",
+    "text": "And Joshua at that time turned back, and took Hazor... and he burnt Hazor with fire.",
+    "event": "Joshua captures and burns Hazor",
+    "place": "Hazor",
+    "era": "c. 1400 BC",
+    "lat": 33.0177,
+    "lon": 35.5681
+  },
+  {
+    "ref": "Joshua 8:28",
+    "text": "And Joshua burnt Ai, and made it an heap for ever, even a desolation unto this day.",
+    "event": "The fall of Ai",
+    "place": "Ai",
+    "era": "c. 1400 BC",
+    "lat": 31.917,
+    "lon": 35.2611
+  },
+  {
+    "ref": "1 Samuel 28:7-8",
+    "text": "Then said Saul unto his servants, Seek me a woman that hath a familiar spirit... And the woman said... whom shall I bring up unto thee? And he said, Bring me up Samuel.",
+    "event": "Saul and the medium of Endor",
+    "place": "Endor",
+    "era": "c. 1010 BC",
+    "lat": 32.617,
+    "lon": 35.417
+  },
+  {
+    "ref": "Amos 1:1",
+    "text": "The words of Amos, who was among the herdmen of Tekoa, which he saw concerning Israel.",
+    "event": "Amos the shepherd-prophet",
+    "place": "Tekoa",
+    "era": "c. 760 BC",
+    "lat": 31.6447,
+    "lon": 35.2147
+  },
+  {
+    "ref": "Jeremiah 1:1",
+    "text": "The words of Jeremiah... of the priests that were in Anathoth in the land of Benjamin.",
+    "event": "Jeremiah's hometown and calling",
+    "place": "Anathoth",
+    "era": "c. 627 BC",
+    "lat": 31.8114,
+    "lon": 35.2606
+  },
+  {
+    "ref": "Jeremiah 46:2",
+    "text": "Against the army of Pharaohnecho king of Egypt, which was by the river Euphrates in Carchemish, which Nebuchadrezzar king of Babylon smote.",
+    "event": "The great battle of Carchemish",
+    "place": "Carchemish",
+    "era": "605 BC",
+    "lat": 36.829,
+    "lon": 38.015
+  },
+  {
+    "ref": "Acts 2:2-4",
+    "text": "And suddenly there came a sound from heaven as of a rushing mighty wind... And there appeared unto them cloven tongues like as of fire... And they were all filled with the Holy Ghost.",
+    "event": "The day of Pentecost",
+    "place": "Jerusalem",
+    "era": "c. AD 30",
+    "lat": 31.7784,
+    "lon": 35.233
+  },
+  {
+    "ref": "1 Kings 8:10-11",
+    "text": "the cloud filled the house of the LORD... for the glory of the LORD had filled the house of the LORD.",
+    "event": "Solomon dedicates the temple",
+    "place": "Jerusalem (the Temple)",
+    "era": "c. 959 BC",
+    "lat": 31.778,
+    "lon": 35.2354
+  },
+  {
+    "ref": "Acts 8:38",
+    "text": "And he commanded the chariot to stand still: and they went down both into the water, both Philip and the eunuch; and he baptized him.",
+    "event": "Philip baptizes the Ethiopian eunuch",
+    "place": "The desert road to Gaza",
+    "era": "c. AD 35",
+    "lat": 31.52,
+    "lon": 34.62
+  },
+  {
+    "ref": "Acts 13:13",
+    "text": "Now when Paul and his company loosed from Paphos, they came to Perga in Pamphylia: and John departing from them returned to Jerusalem.",
+    "event": "John Mark leaves the mission",
+    "place": "Perga",
+    "era": "c. AD 47",
+    "lat": 36.9613,
+    "lon": 30.8537
+  },
+  {
+    "ref": "Acts 13:14-16",
+    "text": "they came to Antioch in Pisidia, and went into the synagogue on the sabbath day... Then Paul stood up, and beckoning with his hand said, Men of Israel, and ye that fear God, give audience.",
+    "event": "Paul's sermon in the synagogue",
+    "place": "Antioch in Pisidia",
+    "era": "c. AD 47",
+    "lat": 38.306,
+    "lon": 31.1897
+  },
+  {
+    "ref": "Acts 14:1",
+    "text": "And it came to pass in Iconium, that they went both together into the synagogue... and so spake, that a great multitude both of the Jews and also of the Greeks believed.",
+    "event": "A great multitude believes",
+    "place": "Iconium",
+    "era": "c. AD 48",
+    "lat": 37.8716,
+    "lon": 32.4847
+  },
+  {
+    "ref": "Acts 14:20-21",
+    "text": "And the next day he departed with Barnabas to Derbe. And when they had preached the gospel to that city, and had taught many...",
+    "event": "Many disciples made at Derbe",
+    "place": "Derbe",
+    "era": "c. AD 48",
+    "lat": 37.35,
+    "lon": 33.28
+  },
+  {
+    "ref": "Acts 28:12",
+    "text": "And landing at Syracuse, we tarried there three days.",
+    "event": "Paul's voyage stops at Syracuse",
+    "place": "Syracuse, Sicily",
+    "era": "c. AD 60",
+    "lat": 37.0755,
+    "lon": 15.2866
+  },
+  {
+    "ref": "Acts 28:13-14",
+    "text": "and came the next day to Puteoli: where we found brethren... and so we went toward Rome.",
+    "event": "Paul lands in Italy",
+    "place": "Puteoli",
+    "era": "c. AD 60",
+    "lat": 40.8225,
+    "lon": 14.1216
+  },
+  {
+    "ref": "1 Samuel 4:10-11",
+    "text": "And the Philistines fought, and Israel was smitten... And the ark of God was taken; and the two sons of Eli, Hophni and Phinehas, were slain.",
+    "event": "The Philistines capture the ark",
+    "place": "Aphek",
+    "era": "c. 1080 BC",
+    "lat": 32.1042,
+    "lon": 34.9356
+  },
+  {
+    "ref": "1 Samuel 7:5-6",
+    "text": "And Samuel said, Gather all Israel to Mizpeh, and I will pray for you unto the LORD... and they drew water, and poured it out before the LORD, and fasted on that day.",
+    "event": "Samuel gathers Israel to repent",
+    "place": "Mizpah",
+    "era": "c. 1070 BC",
+    "lat": 31.887,
+    "lon": 35.216
+  },
+  {
+    "ref": "1 Samuel 11:4",
+    "text": "Then came the messengers to Gibeah of Saul, and told the tidings in the ears of the people: and all the people lifted up their voices, and wept.",
+    "event": "Saul's royal town hears the call to arms",
+    "place": "Gibeah",
+    "era": "c. 1020 BC",
+    "lat": 31.8237,
+    "lon": 35.2317
+  },
+  {
+    "ref": "1 Samuel 11:9-11",
+    "text": "And it came to pass on the morrow, that Saul put the people in three companies... and slew the Ammonites until the heat of the day.",
+    "event": "Saul rescues Jabesh-gilead",
+    "place": "Jabesh-gilead",
+    "era": "c. 1020 BC",
+    "lat": 32.45,
+    "lon": 35.65
+  },
+  {
+    "ref": "1 Kings 9:17",
+    "text": "And Solomon built Gezer, and Bethhoron the nether.",
+    "event": "Solomon rebuilds the city",
+    "place": "Gezer",
+    "era": "c. 950 BC",
+    "lat": 31.8597,
+    "lon": 34.9189
+  },
+  {
+    "ref": "2 Kings 25:6-7",
+    "text": "So they took the king, and brought him up to the king of Babylon to Riblah... and they put out the eyes of Zedekiah, and bound him with fetters of brass.",
+    "event": "King Zedekiah is blinded",
+    "place": "Riblah",
+    "era": "586 BC",
+    "lat": 34.4607,
+    "lon": 36.5526
+  },
+  {
+    "ref": "Jeremiah 43:7-8",
+    "text": "So they came into the land of Egypt... thus came they even to Tahpanhes. Then came the word of the LORD unto Jeremiah in Tahpanhes.",
+    "event": "Jeremiah carried into Egypt",
+    "place": "Tahpanhes",
+    "era": "c. 586 BC",
+    "lat": 30.8667,
+    "lon": 32.1667
+  },
+  {
+    "ref": "Matthew 11:21",
+    "text": "Woe unto thee, Chorazin! woe unto thee, Bethsaida! for if the mighty works... had been done in Tyre and Sidon, they would have repented long ago.",
+    "event": "Jesus pronounces woe on the city",
+    "place": "Chorazin",
+    "era": "c. AD 29",
+    "lat": 32.9106,
+    "lon": 35.5683
+  },
+  {
+    "ref": "Acts 27:3",
+    "text": "And the next day we touched at Sidon. And Julius courteously entreated Paul, and gave him liberty to go unto his friends to refresh himself.",
+    "event": "Paul is shown kindness on the voyage",
+    "place": "Sidon",
+    "era": "c. AD 59",
+    "lat": 33.563,
+    "lon": 35.3686
+  },
+  {
+    "ref": "Acts 27:5-6",
+    "text": "And when we had sailed over the sea of Cilicia and Pamphylia, we came to Myra, a city of Lycia. And there the centurion found a ship of Alexandria sailing into Italy.",
+    "event": "Paul boards the ship bound for Rome",
+    "place": "Myra",
+    "era": "c. AD 59",
+    "lat": 36.2589,
+    "lon": 29.985
+  },
+  {
+    "ref": "Acts 21:7",
+    "text": "And when we had finished our course from Tyre, we came to Ptolemais, and saluted the brethren, and abode with them one day.",
+    "event": "Paul greets the believers",
+    "place": "Ptolemais",
+    "era": "c. AD 57",
+    "lat": 32.9281,
+    "lon": 35.082
+  },
+  {
+    "ref": "Acts 21:1",
+    "text": "And it came to pass, that after we were gotten from them, and had launched, we came with a straight course unto Coos, and the day following unto Rhodes.",
+    "event": "Paul's ship calls at Rhodes",
+    "place": "Rhodes",
+    "era": "c. AD 57",
+    "lat": 36.4349,
+    "lon": 28.2176
   }
 ]

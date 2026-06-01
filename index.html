@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="style.css?v=7" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -21,6 +21,7 @@
         <li>5 rounds. Beat your best total!</li>
       </ol>
       <p class="hint">A beep warns you in the last 5 seconds. Run out of time and it's 0 points!</p>
+      <p class="disclaimer">Note: locations and dates are approximate &mdash; many biblical sites are estimated from tradition and archaeology, so treat them as a fun guide rather than exact fact.</p>
       <div class="name-row">
         <label for="player-name">Your name</label>
         <input id="player-name" type="text" maxlength="24" placeholder="e.g. Johan" autocomplete="off" />
@@ -39,8 +40,9 @@
     </div>
   </div>
 
-  <!-- Floating leaderboard button during play -->
+  <!-- Floating buttons during play -->
   <button id="lb-fab" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
+  <button id="music-btn" title="Music on/off" aria-label="Toggle music">&#9835;</button>
 
   <header>
     <h1>Bible Guesser</h1>
@@ -71,6 +73,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=6"></script>
+  <script src="game.js?v=7"></script>
 </body>
 </html>
