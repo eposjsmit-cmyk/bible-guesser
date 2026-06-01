@@ -128,53 +128,68 @@ function sfxFanfare() {
 // Gentle two-note flourish at game over
 function sfxGameOver() { playMelody([[523, 0.16], [659, 0.16], [784, 0.24]], 150, 'sine', 0.2); }
 
-// ---- Background music (gentle generative ambient loop) ----
+// ---- Background music (upbeat generative loop) ----
 const MUSIC_KEY = 'bibleGuesser_music';
 let musicOn = localStorage.getItem(MUSIC_KEY) !== '0';   // default on
 let musicTimer = null;
 let musicBus = null;
-// a calm progression (C - G - Am - F), low register triads
-const MUSIC_CHORDS = [
-  [261.63, 329.63, 392.00],
-  [196.00, 246.94, 293.66],
-  [220.00, 261.63, 329.63],
-  [174.61, 220.00, 261.63]
-];
-let chordIndex = 0;
+let musicStep = 0;
 
-function playPad(freqs) {
+const STEP_MS = 200;          // sixteenth-ish; lively tempo
+const STEPS_PER_CHORD = 8;
+// Bright pop progression C - G - Am - F: a bass root + 3 arpeggio tones each
+const SONG = [
+  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [261.63, 329.63, 392.00] }, // C
+  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [293.66, 392.00, 493.88] }, // G
+  { bass: 220.00, pad: [261.63, 329.63, 440.00], arp: [329.63, 440.00, 523.25] }, // Am
+  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }  // F
+];
+// up-down arpeggio pattern over the 3 chord tones
+const ARP_PATTERN = [0, 1, 2, 1, 0, 1, 2, 1];
+
+function tone(freq, dur, type, vol, attack = 0.02) {
   if (!audioCtx || !musicBus) return;
   const t = audioCtx.currentTime;
-  freqs.forEach(f => {
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = f;
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.5, t + 1.4);     // slow swell
-    g.gain.linearRampToValueAtTime(0.0001, t + 4.2);  // slow fade
-    osc.connect(g);
-    g.connect(musicBus);
-    osc.start(t);
-    osc.stop(t + 4.4);
-  });
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(g);
+  g.connect(musicBus);
+  osc.start(t);
+  osc.stop(t + dur + 0.05);
+}
+
+function musicTick() {
+  if (!audioCtx || !musicBus) return;
+  const chord = SONG[Math.floor(musicStep / STEPS_PER_CHORD) % SONG.length];
+  const stepInChord = musicStep % STEPS_PER_CHORD;
+
+  if (stepInChord === 0) {
+    tone(chord.bass, 0.65, 'triangle', 0.55);                 // bouncy bass on the beat
+    chord.pad.forEach(f => tone(f, 1.5, 'sine', 0.12, 0.25)); // soft sustained pad
+  }
+  // plucky arpeggio melody on every step
+  tone(chord.arp[ARP_PATTERN[stepInChord]], 0.16, 'triangle', 0.34);
+
+  musicStep = (musicStep + 1) % (STEPS_PER_CHORD * SONG.length);
 }
 
 function startMusic() {
   if (!audioCtx || musicTimer) return;
   musicBus = audioCtx.createGain();
-  musicBus.gain.value = 0.07;                 // quiet, sits under the sfx
+  musicBus.gain.value = 0.085;                 // sits under the sfx
   const lp = audioCtx.createBiquadFilter();
   lp.type = 'lowpass';
-  lp.frequency.value = 850;                    // warm, mellow
+  lp.frequency.value = 2400;                   // bright enough for plucks
   musicBus.connect(lp);
   lp.connect(audioCtx.destination);
-  playPad(MUSIC_CHORDS[chordIndex]);
-  chordIndex = (chordIndex + 1) % MUSIC_CHORDS.length;
-  musicTimer = setInterval(() => {
-    playPad(MUSIC_CHORDS[chordIndex]);
-    chordIndex = (chordIndex + 1) % MUSIC_CHORDS.length;
-  }, 4000);
+  musicStep = 0;
+  musicTick();
+  musicTimer = setInterval(musicTick, STEP_MS);
 }
 
 function stopMusic() {
