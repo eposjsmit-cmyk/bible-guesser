@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v10';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v11';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -12,7 +12,8 @@ let verses = [];
 let deck = [];
 let roundIndex = 0;
 let totalScore = 0;
-let roundScores = [];   // {place, points} per round, for the results breakdown
+let roundScores = [];   // {place, points, guess, answer} per round, for the recap
+let summaryLayers = []; // map layers drawn on the end-of-game recap
 let current = null;
 let guessMarker = null;
 let answerMarker = null;
@@ -369,6 +370,7 @@ function startRound() {
 
   [guessMarker, answerMarker, line].forEach(l => { if (l) map.removeLayer(l); });
   guessMarker = answerMarker = line = null;
+  clearSummary();
 
   // back to the borders-only guessing map (drop the named reveal layer)
   if (map.hasLayer(bibleLayer)) map.removeLayer(bibleLayer);
@@ -429,7 +431,12 @@ function finishRound(g) {
 
   sfxReveal(points);
 
-  roundScores.push({ place: current.place, points });
+  roundScores.push({
+    place: current.place,
+    points,
+    guess: g ? { lat: g.lat, lon: g.lng } : null,
+    answer: { lat: current.lat, lon: current.lon }
+  });
 
   const prevTotal = totalScore;
   totalScore += points;
@@ -490,6 +497,45 @@ nextBtn.onclick = () => {
   advance();   // skip the countdown
 };
 
+function clearSummary() {
+  summaryLayers.forEach(l => { if (map.hasLayer(l)) map.removeLayer(l); });
+  summaryLayers = [];
+}
+
+// Draw every round's guess (dot) and answer (pin + place name) on one map
+function renderSummary() {
+  // drop the last round's single markers/line first
+  [guessMarker, answerMarker, line].forEach(l => { if (l) map.removeLayer(l); });
+  guessMarker = answerMarker = line = null;
+  clearSummary();
+
+  const pts = [];
+  roundScores.forEach((r, i) => {
+    if (!r.answer) return;
+    const a = [r.answer.lat, r.answer.lon];
+    const am = L.marker(a, { title: r.place })
+      .addTo(map)
+      .bindTooltip(`${i + 1}. ${r.place}`, {
+        permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip'
+      })
+      .openTooltip();
+    summaryLayers.push(am);
+    pts.push(a);
+
+    if (r.guess) {
+      const g = [r.guess.lat, r.guess.lon];
+      const gm = L.circleMarker(g, {
+        radius: 6, color: '#1f6feb', weight: 2, fillColor: '#1f6feb', fillOpacity: 0.85
+      }).addTo(map).bindTooltip(`Your guess ${i + 1}`, { direction: 'bottom' });
+      const ln = L.polyline([g, a], { color: '#8a5a2b', dashArray: '5 5', weight: 2 }).addTo(map);
+      summaryLayers.push(gm, ln);
+      pts.push(g);
+    }
+  });
+
+  if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.2));
+}
+
 async function endGame() {
   stopTimer();
   clearAuto();
@@ -511,7 +557,11 @@ async function endGame() {
     `<h3 class="rounds-title">Your rounds</h3>` +
     `<table class="rounds-table"><tbody>${breakdown}</tbody></table>` +
     `<p class="final-line">Total: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
-    (prevBest > 0 ? `<p class="pb-line">Best: ${Math.max(prevBest, totalScore)}</p>` : '');
+    (prevBest > 0 ? `<p class="pb-line">Best: ${Math.max(prevBest, totalScore)}</p>` : '') +
+    `<p class="map-note">The map shows all your guesses (dots) and the answers (pins).</p>`;
+
+  // draw every guess + answer on the map
+  renderSummary();
 
   const fs = document.getElementById('final-score');
   if (fs) animateCount(fs, 0, totalScore, '', 1000);

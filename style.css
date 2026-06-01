@@ -182,6 +182,7 @@ button:hover:not(:disabled) { background: #5e4622; }
 .rounds-table td:first-child { color: #8a7a5c; width: 1.5rem; }
 .rounds-table td:last-child { text-align: right; font-weight: bold; color: #2e6b3b; }
 .final-line { font-size: 1.1rem; }
+.map-note { font-size: 0.82rem; color: #8a7a5c; font-style: italic; }
 
 /* ---- Place-name label on the revealed map pin ---- */
 .place-tooltip.leaflet-tooltip {
