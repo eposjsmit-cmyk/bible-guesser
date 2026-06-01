@@ -323,7 +323,7 @@ goBtn.addEventListener('click', () => {
   playerName = name;
   localStorage.setItem(NAME_KEY, name);
   initAudio();
-  startOverlay.classList.add('hidden');
+  startOverlay.style.display = 'none';
   newGame();
 });
 
