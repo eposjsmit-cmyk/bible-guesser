@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bible Guesser</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Bible Guesser</h1>
+    <div id="status">
+      <span id="round-label">Round 1 / 5</span>
+      <span id="score-label">Score: 0</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="verse-panel">
+      <p id="verse-text">Loading verses...</p>
+      <p id="verse-ref"></p>
+      <button id="confirm-btn" disabled>Confirm guess</button>
+      <div id="result"></div>
+      <button id="next-btn" class="hidden">Next round</button>
+    </section>
+
+    <div id="map"></div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+[
+  {
+    "ref": "Luke 2:4-7",
+    "text": "And Joseph also went up... unto the city of David, which is called Bethlehem... And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger.",
+    "event": "The birth of Jesus",
+    "place": "Bethlehem",
+    "lat": 31.7054,
+    "lon": 35.2024
+  },
+  {
+    "ref": "1 Samuel 17:48-49",
+    "text": "And David put his hand in his bag, and took thence a stone, and slang it, and smote the Philistine in his forehead... and he fell upon his face to the earth.",
+    "event": "David defeats Goliath",
+    "place": "Valley of Elah",
+    "lat": 31.69,
+    "lon": 34.96
+  },
+  {
+    "ref": "Joshua 6:20",
+    "text": "So the people shouted when the priests blew with the trumpets... and the wall fell down flat... and they took the city.",
+    "event": "The walls of Jericho fall",
+    "place": "Jericho",
+    "lat": 31.8667,
+    "lon": 35.45
+  },
+  {
+    "ref": "Exodus 19:20",
+    "text": "And the LORD came down upon mount Sinai, on the top of the mount: and the LORD called Moses up to the top of the mount; and Moses went up.",
+    "event": "Moses receives the Ten Commandments",
+    "place": "Mount Sinai",
+    "lat": 28.5394,
+    "lon": 33.975
+  },
+  {
+    "ref": "Genesis 8:4",
+    "text": "And the ark rested in the seventh month, on the seventeenth day of the month, upon the mountains of Ararat.",
+    "event": "Noah's ark comes to rest",
+    "place": "Mount Ararat",
+    "lat": 39.7019,
+    "lon": 44.2983
+  },
+  {
+    "ref": "Acts 9:3-4",
+    "text": "And as he journeyed, he came near Damascus: and suddenly there shined round about him a light from heaven... Saul, Saul, why persecutest thou me?",
+    "event": "Paul's conversion on the road to Damascus",
+    "place": "Damascus",
+    "lat": 33.5138,
+    "lon": 36.2765
+  },
+  {
+    "ref": "Jonah 3:3-4",
+    "text": "So Jonah arose, and went unto Nineveh... and he cried, and said, Yet forty days, and Nineveh shall be overthrown.",
+    "event": "Jonah preaches to Nineveh",
+    "place": "Nineveh",
+    "lat": 36.359,
+    "lon": 43.153
+  },
+  {
+    "ref": "1 Kings 18:38-39",
+    "text": "Then the fire of the LORD fell, and consumed the burnt sacrifice... And when all the people saw it, they fell on their faces: and they said, The LORD, he is the God.",
+    "event": "Elijah versus the prophets of Baal",
+    "place": "Mount Carmel",
+    "lat": 32.7333,
+    "lon": 35.05
+  },
+  {
+    "ref": "John 2:9-11",
+    "text": "the ruler of the feast had tasted the water that was made wine... This beginning of miracles did Jesus in Cana of Galilee.",
+    "event": "Jesus turns water into wine",
+    "place": "Cana of Galilee",
+    "lat": 32.7487,
+    "lon": 35.3394
+  },
+  {
+    "ref": "Acts 28:1",
+    "text": "And when they were escaped, then they knew that the island was called Melita.",
+    "event": "Paul is shipwrecked",
+    "place": "Malta (Melita)",
+    "lat": 35.9667,
+    "lon": 14.3667
+  },
+  {
+    "ref": "Esther 1:2",
+    "text": "In those days, when the king Ahasuerus sat on the throne of his kingdom, which was in Shushan the palace.",
+    "event": "Esther becomes queen",
+    "place": "Susa (Shushan)",
+    "lat": 32.1897,
+    "lon": 48.2575
+  },
+  {
+    "ref": "Genesis 11:9",
+    "text": "Therefore is the name of it called Babel; because the LORD did there confound the language of all the earth.",
+    "event": "The Tower of Babel",
+    "place": "Babylon",
+    "lat": 32.5364,
+    "lon": 44.4209
+  },
+  {
+    "ref": "Matthew 27:33-35",
+    "text": "And when they were come unto a place called Golgotha... they crucified him.",
+    "event": "The crucifixion of Jesus",
+    "place": "Jerusalem (Golgotha)",
+    "lat": 31.7784,
+    "lon": 35.2298
+  },
+  {
+    "ref": "Matthew 4:18-19",
+    "text": "And Jesus, walking by the sea of Galilee, saw two brethren... Follow me, and I will make you fishers of men.",
+    "event": "Jesus calls his first disciples",
+    "place": "Sea of Galilee",
+    "lat": 32.8808,
+    "lon": 35.5754
+  },
+  {
+    "ref": "Genesis 22:2",
+    "text": "Take now thy son... and get thee into the land of Moriah; and offer him there for a burnt offering upon one of the mountains.",
+    "event": "Abraham is tested with Isaac",
+    "place": "Mount Moriah, Jerusalem",
+    "lat": 31.778,
+    "lon": 35.236
+  },
+  {
+    "ref": "Genesis 15:7",
+    "text": "And he said unto him, I am the LORD that brought thee out of Ur of the Chaldees, to give thee this land to inherit it.",
+    "event": "God calls Abram from his homeland",
+    "place": "Ur of the Chaldees",
+    "lat": 30.9626,
+    "lon": 46.103
+  },
+  {
+    "ref": "Genesis 12:4",
+    "text": "So Abram departed, as the LORD had spoken unto him... and Abram was seventy and five years old when he departed out of Haran.",
+    "event": "Abram leaves Haran for Canaan",
+    "place": "Haran",
+    "lat": 36.8649,
+    "lon": 39.0307
+  },
+  {
+    "ref": "Genesis 23:19",
+    "text": "And after this, Abraham buried Sarah his wife in the cave of the field of Machpelah... the same is Hebron in the land of Canaan.",
+    "event": "Abraham buries Sarah at the cave of Machpelah",
+    "place": "Hebron",
+    "lat": 31.5326,
+    "lon": 35.0998
+  },
+  {
+    "ref": "Genesis 19:24",
+    "text": "Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the LORD out of heaven.",
+    "event": "The destruction of Sodom and Gomorrah",
+    "place": "Plain near the Dead Sea",
+    "lat": 31.25,
+    "lon": 35.4
+  },
+  {
+    "ref": "Genesis 21:14",
+    "text": "and she departed, and wandered in the wilderness of Beersheba.",
+    "event": "Hagar and Ishmael in the wilderness",
+    "place": "Beersheba",
+    "lat": 31.2518,
+    "lon": 34.7913
+  },
+  {
+    "ref": "Genesis 28:12",
+    "text": "And he dreamed, and behold a ladder set up on the earth, and the top of it reached to heaven: and behold the angels of God ascending and descending on it.",
+    "event": "Jacob's ladder",
+    "place": "Bethel",
+    "lat": 31.9308,
+    "lon": 35.2203
+  },
+  {
+    "ref": "Genesis 32:24",
+    "text": "And Jacob was left alone; and there wrestled a man with him until the breaking of the day.",
+    "event": "Jacob wrestles with God",
+    "place": "Peniel, by the Jabbok",
+    "lat": 32.2,
+    "lon": 35.62
+  },
+  {
+    "ref": "John 4:6-7",
+    "text": "Now Jacob's well was there. Jesus therefore, being wearied with his journey, sat thus on the well... There cometh a woman of Samaria to draw water.",
+    "event": "Jesus and the woman at the well",
+    "place": "Shechem (Sychar)",
+    "lat": 32.2137,
+    "lon": 35.2783
+  },
+  {
+    "ref": "Exodus 14:21",
+    "text": "and the LORD caused the sea to go back by a strong east wind all that night... and the waters were divided.",
+    "event": "The crossing of the Red Sea",
+    "place": "The Red Sea",
+    "lat": 30.0,
+    "lon": 32.55
+  },
+  {
+    "ref": "Deuteronomy 34:1",
+    "text": "And Moses went up... unto the top of Pisgah... And the LORD shewed him all the land.",
+    "event": "Moses views the Promised Land",
+    "place": "Mount Nebo",
+    "lat": 31.7681,
+    "lon": 35.7253
+  },
+  {
+    "ref": "Joshua 10:13",
+    "text": "And the sun stood still, and the moon stayed, until the people had avenged themselves upon their enemies.",
+    "event": "The sun stands still",
+    "place": "Gibeon",
+    "lat": 31.8467,
+    "lon": 35.1844
+  },
+  {
+    "ref": "1 Samuel 31:4",
+    "text": "Therefore Saul took a sword, and fell upon it.",
+    "event": "The death of King Saul",
+    "place": "Mount Gilboa",
+    "lat": 32.4,
+    "lon": 35.42
+  },
+  {
+    "ref": "Revelation 16:16",
+    "text": "And he gathered them together into a place called in the Hebrew tongue Armageddon.",
+    "event": "The gathering at Armageddon",
+    "place": "Megiddo",
+    "lat": 32.5849,
+    "lon": 35.184
+  },
+  {
+    "ref": "Luke 4:28-29",
+    "text": "And all they in the synagogue... rose up, and thrust him out of the city, and led him unto the brow of the hill... that they might cast him down headlong.",
+    "event": "Jesus is rejected at his hometown",
+    "place": "Nazareth",
+    "lat": 32.7019,
+    "lon": 35.2978
+  },
+  {
+    "ref": "Mark 2:1-4",
+    "text": "And again he entered into Capernaum... they uncovered the roof where he was... and let down the bed wherein the sick of the palsy lay.",
+    "event": "The paralytic lowered through the roof",
+    "place": "Capernaum",
+    "lat": 32.8808,
+    "lon": 35.575
+  },
+  {
+    "ref": "Matthew 3:16",
+    "text": "And Jesus, when he was baptized, went up straightway out of the water: and, lo, the heavens were opened unto him.",
+    "event": "The baptism of Jesus",
+    "place": "The Jordan River",
+    "lat": 31.8372,
+    "lon": 35.5497
+  },
+  {
+    "ref": "Matthew 17:2",
+    "text": "And was transfigured before them: and his face did shine as the sun, and his raiment was white as the light.",
+    "event": "The Transfiguration",
+    "place": "Mount Tabor",
+    "lat": 32.6869,
+    "lon": 35.3903
+  },
+  {
+    "ref": "John 11:43-44",
+    "text": "And when he thus had spoken, he cried with a loud voice, Lazarus, come forth. And he that was dead came forth.",
+    "event": "The raising of Lazarus",
+    "place": "Bethany",
+    "lat": 31.7717,
+    "lon": 35.2569
+  },
+  {
+    "ref": "Matthew 26:36",
+    "text": "Then cometh Jesus with them unto a place called Gethsemane, and saith unto the disciples, Sit ye here, while I go and pray yonder.",
+    "event": "Jesus prays before his arrest",
+    "place": "Gethsemane",
+    "lat": 31.7794,
+    "lon": 35.2397
+  },
+  {
+    "ref": "Acts 1:9-12",
+    "text": "he was taken up; and a cloud received him out of their sight... Then returned they unto Jerusalem from the mount called Olivet.",
+    "event": "The Ascension of Jesus",
+    "place": "Mount of Olives",
+    "lat": 31.7784,
+    "lon": 35.2461
+  },
+  {
+    "ref": "Luke 24:30-31",
+    "text": "And their eyes were opened, and they knew him; and he vanished out of their sight.",
+    "event": "On the road to Emmaus",
+    "place": "Emmaus",
+    "lat": 31.84,
+    "lon": 34.99
+  },
+  {
+    "ref": "Acts 9:40",
+    "text": "and turning him to the body said, Tabitha, arise. And she opened her eyes: and when she saw Peter, she sat up.",
+    "event": "Peter raises Tabitha",
+    "place": "Joppa (Jaffa)",
+    "lat": 32.0533,
+    "lon": 34.7522
+  },
+  {
+    "ref": "Acts 10:1-2",
+    "text": "There was a certain man in Caesarea called Cornelius, a centurion... a devout man, and one that feared God.",
+    "event": "Cornelius, the first Gentile convert",
+    "place": "Caesarea Maritima",
+    "lat": 32.5021,
+    "lon": 34.8917
+  },
+  {
+    "ref": "Matthew 16:18",
+    "text": "And I say also unto thee, That thou art Peter, and upon this rock I will build my church.",
+    "event": "Peter's confession of Christ",
+    "place": "Caesarea Philippi",
+    "lat": 33.2486,
+    "lon": 35.6944
+  },
+  {
+    "ref": "Acts 11:26",
+    "text": "And the disciples were called Christians first in Antioch.",
+    "event": "Believers first called Christians",
+    "place": "Antioch",
+    "lat": 36.2021,
+    "lon": 36.1604
+  },
+  {
+    "ref": "Acts 22:3",
+    "text": "I am verily a man which am a Jew, born in Tarsus, a city in Cilicia.",
+    "event": "Paul names his birthplace",
+    "place": "Tarsus",
+    "lat": 36.9177,
+    "lon": 34.8947
+  },
+  {
+    "ref": "Acts 19:28",
+    "text": "they were full of wrath, and cried out, saying, Great is Diana of the Ephesians.",
+    "event": "The riot of the silversmiths",
+    "place": "Ephesus",
+    "lat": 37.9417,
+    "lon": 27.3417
+  },
+  {
+    "ref": "Acts 16:25-26",
+    "text": "And suddenly there was a great earthquake, so that the foundations of the prison were shaken... and every one's bands were loosed.",
+    "event": "Paul and Silas freed from prison",
+    "place": "Philippi",
+    "lat": 41.0136,
+    "lon": 24.287
+  },
+  {
+    "ref": "Acts 17:22",
+    "text": "Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I perceive that in all things ye are too superstitious.",
+    "event": "Paul preaches at the Areopagus",
+    "place": "Athens",
+    "lat": 37.9715,
+    "lon": 23.7257
+  },
+  {
+    "ref": "Acts 18:1",
+    "text": "After these things Paul departed from Athens, and came to Corinth.",
+    "event": "Paul's ministry in Corinth",
+    "place": "Corinth",
+    "lat": 37.9061,
+    "lon": 22.8786
+  },
+  {
+    "ref": "Acts 28:16",
+    "text": "And when we came to Rome... Paul was suffered to dwell by himself with a soldier that kept him.",
+    "event": "Paul's imprisonment in Rome",
+    "place": "Rome",
+    "lat": 41.9028,
+    "lon": 12.4964
+  },
+  {
+    "ref": "Revelation 1:9",
+    "text": "I John... was in the isle that is called Patmos, for the word of God, and for the testimony of Jesus Christ.",
+    "event": "John receives the Revelation",
+    "place": "Patmos",
+    "lat": 37.3089,
+    "lon": 26.5479
+  },
+  {
+    "ref": "1 Kings 16:24",
+    "text": "And he bought the hill Samaria... and built on the hill, and called the name of the city... Samaria.",
+    "event": "Omri builds the capital of Israel",
+    "place": "Samaria",
+    "lat": 32.2806,
+    "lon": 35.19
+  },
+  {
+    "ref": "1 Kings 21:1-2",
+    "text": "Naboth the Jezreelite had a vineyard, which was in Jezreel, hard by the palace of Ahab king of Samaria.",
+    "event": "Naboth's vineyard",
+    "place": "Jezreel",
+    "lat": 32.5577,
+    "lon": 35.3289
+  },
+  {
+    "ref": "Mark 7:26",
+    "text": "The woman was a Greek, a Syrophenician by nation; and she besought him that he would cast forth the devil out of her daughter.",
+    "event": "The faith of the Syrophoenician woman",
+    "place": "Tyre",
+    "lat": 33.2705,
+    "lon": 35.1939
+  }
+]
