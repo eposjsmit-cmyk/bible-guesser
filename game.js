@@ -1,5 +1,7 @@
 // Bible Guesser - game logic
 
+const GAME_VERSION = 'v9';   // shown at bottom of screen so you can confirm what's loaded
+
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
 
@@ -60,6 +62,8 @@ const lbFab        = document.getElementById('lb-fab');
 const lbCloseBtn   = document.getElementById('lb-close');
 const lbOpenStart  = document.getElementById('lb-open-start');
 const musicBtn     = document.getElementById('music-btn');
+const versionEl    = document.getElementById('version');
+if (versionEl) versionEl.textContent = GAME_VERSION;
 
 const CLOCK_CIRC = 2 * Math.PI * 16;   // circumference of the clock ring (r = 16)
 

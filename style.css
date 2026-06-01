@@ -209,6 +209,21 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 #lb-fab { bottom: 16px; }
 #music-btn { bottom: 78px; }
 
+/* ---- Version label ---- */
+#version {
+  position: fixed;
+  left: 8px;
+  bottom: 6px;
+  z-index: 1100;            /* visible even over the start screen */
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  color: rgba(244, 239, 230, 0.85);
+  background: rgba(43, 35, 25, 0.55);
+  padding: 1px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
 /* ---- Disclaimer on start screen ---- */
 .overlay-card .disclaimer {
   font-size: 0.82rem;
