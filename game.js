@@ -100,6 +100,30 @@ function timeoutBuzz() {
   setTimeout(() => beep(140, 0.4, 'sawtooth', 0.25), 180);
 }
 
+// Play a sequence of notes: [freq, durationSec] pairs, spaced by `gap` ms
+function playMelody(notes, gap = 130, type = 'triangle', vol = 0.2) {
+  notes.forEach(([f, d], i) => setTimeout(() => beep(f, d, type, vol), i * gap));
+}
+
+// Soft click when a guess is confirmed
+function sfxConfirm() { beep(520, 0.07, 'triangle', 0.16); }
+
+// Result chime that scales with how good the guess was
+function sfxReveal(points) {
+  if (points >= 3500)      playMelody([[659, 0.12], [880, 0.12], [1175, 0.2]]);   // great
+  else if (points >= 1800) playMelody([[622, 0.12], [831, 0.16]]);                // good
+  else if (points >= 600)  beep(494, 0.18, 'sine', 0.18);                         // okay
+  else                     timeoutBuzz();                                          // miss
+}
+
+// Victory fanfare for a new personal best
+function sfxFanfare() {
+  playMelody([[523, 0.14], [659, 0.14], [784, 0.14], [1047, 0.26]], 140, 'triangle', 0.22);
+}
+
+// Gentle two-note flourish at game over (no new best)
+function sfxGameOver() { playMelody([[440, 0.16], [330, 0.22]], 160, 'sine', 0.18); }
+
 // ---- Helpers ----
 function shuffle(arr) {
   const a = arr.slice();
@@ -271,8 +295,12 @@ function finishRound(g) {
   bibleLayer.addTo(map);
   answerMarker = L.marker([current.lat, current.lon], { title: current.place })
     .addTo(map)
-    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>`)
-    .openPopup();
+    // permanent label so the place name floats right on the map pin
+    .bindTooltip(current.place, {
+      permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip'
+    })
+    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>`);
+  answerMarker.openTooltip();
 
   const eraLine = `<p class="era">When: <strong>${current.era}</strong></p>`;
 
@@ -297,6 +325,8 @@ function finishRound(g) {
       `<p>+<span class="points" id="round-points">0</span> points</p>`;
   }
 
+  sfxReveal(points);
+
   const prevTotal = totalScore;
   totalScore += points;
   // count the header total up, and the round points up from zero
@@ -310,12 +340,12 @@ function finishRound(g) {
 
 function timeUp() {
   if (locked) return;
-  timeoutBuzz();
   finishRound(guessMarker ? guessMarker.getLatLng() : null);
 }
 
 confirmBtn.addEventListener('click', () => {
   if (!guessMarker || locked) return;
+  sfxConfirm();
   finishRound(guessMarker.getLatLng());
 });
 
@@ -351,6 +381,9 @@ async function endGame() {
 
   const fs = document.getElementById('final-score');
   if (fs) animateCount(fs, 0, totalScore, '', 1000);
+
+  // celebratory sound after the count-up settles
+  setTimeout(() => { if (isNewBest) sfxFanfare(); else sfxGameOver(); }, 1050);
 
   nextBtn.textContent = 'Play again';
   nextBtn.dataset.mode = 'restart';
