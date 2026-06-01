@@ -20,7 +20,11 @@
         <li>The closer your guess, the more points &mdash; up to 5000.</li>
         <li>5 rounds. Beat your best total!</li>
       </ol>
-      <p class="hint">A beep warns you in the last 5 seconds. Run out of time with no guess and it's 0 points!</p>
+      <p class="hint">A beep warns you in the last 5 seconds. Run out of time and it's 0 points!</p>
+      <div class="name-row">
+        <label for="player-name">Your name</label>
+        <input id="player-name" type="text" maxlength="24" placeholder="e.g. Johan" autocomplete="off" />
+      </div>
       <button id="go-btn" disabled>Loading...</button>
     </div>
   </div>
@@ -41,6 +45,7 @@
       <button id="confirm-btn" disabled>Confirm guess</button>
       <div id="result"></div>
       <button id="next-btn" class="hidden">Next round</button>
+      <div id="leaderboard" class="hidden"></div>
     </section>
 
     <div id="map"></div>

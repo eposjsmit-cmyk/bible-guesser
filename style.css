@@ -91,3 +91,44 @@ button:hover:not(:disabled) { background: #5e4622; }
 .overlay-card ol { text-align: left; line-height: 1.7; padding-left: 1.3rem; }
 .overlay-card .hint { font-size: 0.92rem; color: #8a5a2b; }
 #go-btn { font-size: 1.3rem; padding: 0.8rem 3rem; margin-top: 0.8rem; }
+
+/* ---- Name input on start screen ---- */
+.name-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+.name-row label { font-weight: bold; color: #3b2f1e; }
+.name-row input {
+  width: 100%;
+  max-width: 260px;
+  padding: 0.5rem 0.8rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  border: 2px solid #d8cdb8;
+  border-radius: 4px;
+  background: #fff;
+  text-align: center;
+}
+.name-row input:focus { outline: none; border-color: #7a5c2e; }
+
+/* ---- Leaderboard ---- */
+#leaderboard { margin-top: 0.5rem; }
+#leaderboard h3 { margin: 0 0 0.5rem; color: #3b2f1e; }
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.lb-table th, .lb-table td {
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e2d9c8;
+}
+.lb-table th { color: #6b5d45; font-weight: bold; }
+.lb-table tr.lb-me td { background: #f0e8d0; font-weight: bold; color: #2e6b3b; }
+.lb-loading, .lb-empty { color: #8a5a2b; font-style: italic; }
+.new-best { color: #2e6b3b; font-weight: bold; }
+.pb-line { color: #6b5d45; }
