@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -33,7 +33,13 @@
     <h1>Bible Guesser</h1>
     <div id="status">
       <span id="round-label">Round 1 / 5</span>
-      <span id="timer-label">&#9201; 30s</span>
+      <span id="timer-label" class="clock">
+        <svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true">
+          <circle class="clock-bg" cx="21" cy="21" r="16"></circle>
+          <circle class="clock-fg" cx="21" cy="21" r="16"></circle>
+        </svg>
+        <span class="clock-num">30</span>
+      </span>
       <span id="score-label">Score: 0</span>
     </div>
   </header>
@@ -52,6 +58,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=3"></script>
+  <script src="game.js?v=4"></script>
 </body>
 </html>

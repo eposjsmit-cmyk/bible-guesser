@@ -36,10 +36,26 @@ const resultBox    = document.getElementById('result');
 const roundLabel   = document.getElementById('round-label');
 const scoreLabel   = document.getElementById('score-label');
 const timerLabel   = document.getElementById('timer-label');
+const clockFg      = document.querySelector('.clock-fg');
+const clockNum     = document.querySelector('.clock-num');
 const startOverlay = document.getElementById('start-overlay');
 const goBtn        = document.getElementById('go-btn');
 const nameInput    = document.getElementById('player-name');
 const leaderboard  = document.getElementById('leaderboard');
+
+const CLOCK_CIRC = 2 * Math.PI * 16;   // circumference of the clock ring (r = 16)
+
+// Smoothly animate a numeric label from one value to another (count-up effect)
+function animateCount(el, from, to, prefix = '', ms = 650) {
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min(1, (now - start) / ms);
+    const eased = 1 - Math.pow(1 - t, 3);   // easeOutCubic
+    el.textContent = `${prefix}${Math.round(from + (to - from) * eased)}`;
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
 
 // ---- Sound ----
 let audioCtx = null;
@@ -156,19 +172,29 @@ function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ---- Timer ----
-function updateTimerLabel() {
-  timerLabel.innerHTML = `&#9201; ${timeLeft}s`;
+// ---- Timer / clock ----
+function updateClock() {
+  const frac = Math.max(0, timeLeft / ROUND_SECONDS);
+  if (clockFg) clockFg.style.strokeDashoffset = CLOCK_CIRC * (1 - frac);
+  if (clockNum) clockNum.textContent = timeLeft;
   timerLabel.classList.toggle('low', timeLeft <= 10);
 }
 
 function startTimer() {
   clearInterval(timerId);
   timeLeft = ROUND_SECONDS;
-  updateTimerLabel();
+  // reset the ring to full instantly (no reverse-sweep animation)
+  if (clockFg) {
+    clockFg.style.transition = 'none';
+    updateClock();
+    void clockFg.getBoundingClientRect();   // force reflow
+    clockFg.style.transition = '';
+  } else {
+    updateClock();
+  }
   timerId = setInterval(() => {
     timeLeft--;
-    updateTimerLabel();
+    updateClock();
     if (timeLeft <= 5 && timeLeft > 0) beep(700, 0.09, 'square', 0.15);
     if (timeLeft <= 0) { clearInterval(timerId); timeUp(); }
   }, 1000);
@@ -228,17 +254,22 @@ function finishRound(g) {
     resultBox.innerHTML =
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
       `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
-      `<p>+<span class="points">${points}</span> points</p>`;
+      `<p>+<span class="points" id="round-points">0</span> points</p>`;
   } else {
     map.setView([current.lat, current.lon], 6);
     resultBox.innerHTML =
       `<p><strong>Time's up!</strong> No guess placed.</p>` +
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
-      `<p>+<span class="points">0</span> points</p>`;
+      `<p>+<span class="points" id="round-points">0</span> points</p>`;
   }
 
+  const prevTotal = totalScore;
   totalScore += points;
-  scoreLabel.textContent = `Score: ${totalScore}`;
+  // count the header total up, and the round points up from zero
+  animateCount(scoreLabel, prevTotal, totalScore, 'Score: ');
+  const rp = document.getElementById('round-points');
+  if (rp) animateCount(rp, 0, points, '', 700);
+
   nextBtn.classList.remove('hidden');
   confirmBtn.classList.add('hidden');
 }
@@ -267,7 +298,9 @@ nextBtn.onclick = () => {
 
 async function endGame() {
   stopTimer();
-  timerLabel.innerHTML = '&#9201; --';
+  // reset the clock to empty
+  if (clockNum) clockNum.textContent = '0';
+  if (clockFg) clockFg.style.strokeDashoffset = CLOCK_CIRC;
   timerLabel.classList.remove('low');
   verseText.textContent = 'Game over!';
   verseRef.textContent = '';
@@ -277,10 +310,13 @@ async function endGame() {
   const isNewBest = totalScore > prevBest;
 
   resultBox.innerHTML =
-    `<p>Final score: <span class="points">${totalScore}</span> / ${ROUNDS * 5000}</p>` +
+    `<p>Final score: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
     (isNewBest
       ? `<p class="new-best">New personal best!</p>`
       : prevBest > 0 ? `<p class="pb-line">Personal best: ${prevBest}</p>` : '');
+
+  const fs = document.getElementById('final-score');
+  if (fs) animateCount(fs, 0, totalScore, '', 1000);
 
   nextBtn.textContent = 'Play again';
   nextBtn.dataset.mode = 'restart';
