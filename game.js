@@ -325,7 +325,13 @@ goBtn.addEventListener('click', () => {
   initAudio();
   startOverlay.style.display = 'none';
   newGame();
+  // map container size may have settled now the overlay is gone
+  setTimeout(() => map.invalidateSize(), 120);
 });
+
+// Keep the map correctly sized when the phone rotates or the window resizes
+window.addEventListener('resize', () => map.invalidateSize());
+window.addEventListener('orientationchange', () => setTimeout(() => map.invalidateSize(), 200));
 
 // ---- Load verses ----
 fetch('verses.json')
