@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v9';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v10';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -12,6 +12,7 @@ let verses = [];
 let deck = [];
 let roundIndex = 0;
 let totalScore = 0;
+let roundScores = [];   // {place, points} per round, for the results breakdown
 let current = null;
 let guessMarker = null;
 let answerMarker = null;
@@ -34,8 +35,21 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical
   maxZoom: 8
 }).addTo(map);
 
-// Reveal layer: National Geographic atlas style WITH borders, regions and
-// place names. Added only when the true location is shown, removed each round.
+// Border lines (NO place names) shown on the GUESSING map to help you orient.
+// Drawn from a local GeoJSON so it's reliable and offline-friendly.
+let bordersLayer = null;
+fetch('countries.geo.json')
+  .then(r => r.json())
+  .then(geo => {
+    bordersLayer = L.geoJSON(geo, {
+      interactive: false,
+      style: { color: '#5e4622', weight: 1, opacity: 0.65, fill: false }
+    }).addTo(map);   // always on during play
+  })
+  .catch(() => { /* borders are a nice-to-have; ignore if it fails */ });
+
+// Reveal layer: National Geographic atlas WITH places and names. Added only
+// when the true location is shown, removed again each round.
 const bibleLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Tiles &copy; Esri &mdash; National Geographic, DeLorme, HERE, UNEP-WCMC',
   maxZoom: 16
@@ -230,8 +244,8 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 function scoreFor(distanceKm) {
-  // Tighter falloff: you need to be closer to score big (was /1000)
-  return Math.round(5000 * Math.exp(-distanceKm / 600));
+  // Stricter falloff: you really need to be close to score big
+  return Math.round(5000 * Math.exp(-distanceKm / 450));
 }
 
 // ---- Personal best ----
@@ -356,8 +370,9 @@ function startRound() {
   [guessMarker, answerMarker, line].forEach(l => { if (l) map.removeLayer(l); });
   guessMarker = answerMarker = line = null;
 
-  // back to the no-label physical map for guessing
+  // back to the borders-only guessing map (drop the named reveal layer)
   if (map.hasLayer(bibleLayer)) map.removeLayer(bibleLayer);
+  if (bordersLayer && !map.hasLayer(bordersLayer)) bordersLayer.addTo(map);
 
   map.setView([31.5, 35.5], 5);
   startTimer();
@@ -377,8 +392,9 @@ function finishRound(g) {
   confirmBtn.disabled = true;
 
   let points = 0;
-  // reveal the labeled Bible-era atlas map (borders, regions, place names)
+  // reveal the labeled atlas map (places and names); hide the plain borders
   bibleLayer.addTo(map);
+  if (bordersLayer && map.hasLayer(bordersLayer)) map.removeLayer(bordersLayer);
   answerMarker = L.marker([current.lat, current.lon], { title: current.place })
     .addTo(map)
     // permanent label so the place name floats right on the map pin
@@ -412,6 +428,8 @@ function finishRound(g) {
   }
 
   sfxReveal(points);
+
+  roundScores.push({ place: current.place, points });
 
   const prevTotal = totalScore;
   totalScore += points;
@@ -485,8 +503,14 @@ async function endGame() {
   const prevBest = getPersonalBest();
   savePersonalBest(totalScore);
 
+  const breakdown = roundScores.map((r, i) =>
+    `<tr><td>${i + 1}</td><td>${escHtml(r.place)}</td><td>${r.points}</td></tr>`
+  ).join('');
+
   resultBox.innerHTML =
-    `<p>Final score: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
+    `<h3 class="rounds-title">Your rounds</h3>` +
+    `<table class="rounds-table"><tbody>${breakdown}</tbody></table>` +
+    `<p class="final-line">Total: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
     (prevBest > 0 ? `<p class="pb-line">Best: ${Math.max(prevBest, totalScore)}</p>` : '');
 
   const fs = document.getElementById('final-score');
@@ -510,6 +534,7 @@ async function endGame() {
 function newGame() {
   roundIndex = 0;
   totalScore = 0;
+  roundScores = [];
   deck = shuffle(verses).slice(0, ROUNDS);
   startRound();
 }

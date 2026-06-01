@@ -167,6 +167,22 @@ button:hover:not(:disabled) { background: #5e4622; }
 #result .era { color: #6b5d45; }
 #result .era strong { color: #3b2f1e; }
 
+/* ---- Per-round breakdown on the results screen ---- */
+.rounds-title { margin: 0 0 0.4rem; color: #3b2f1e; font-size: 1.05rem; }
+.rounds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.rounds-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #e2d9c8;
+}
+.rounds-table td:first-child { color: #8a7a5c; width: 1.5rem; }
+.rounds-table td:last-child { text-align: right; font-weight: bold; color: #2e6b3b; }
+.final-line { font-size: 1.1rem; }
+
 /* ---- Place-name label on the revealed map pin ---- */
 .place-tooltip.leaflet-tooltip {
   background: #fbf8f1;
