@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v11';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v12';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -55,6 +55,23 @@ const bibleLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/serv
   attribution: 'Tiles &copy; Esri &mdash; National Geographic, DeLorme, HERE, UNEP-WCMC',
   maxZoom: 16
 });
+
+// Coloured map pins: red = your guess, green = the correct answer
+function makePin(color) {
+  return L.divIcon({
+    className: 'pin-icon',
+    html: `<svg width="26" height="38" viewBox="0 0 26 38" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13 0C5.82 0 0 5.82 0 13c0 9.6 13 25 13 25s13-15.4 13-25C26 5.82 20.18 0 13 0z" fill="${color}" stroke="#3b2f1e" stroke-width="1.5"/>
+      <circle cx="13" cy="13" r="4.5" fill="#fbf8f1"/>
+    </svg>`,
+    iconSize: [26, 38],
+    iconAnchor: [13, 38],
+    tooltipAnchor: [0, -34],
+    popupAnchor: [0, -34]
+  });
+}
+const answerPin = makePin('#2e8b57');   // green = correct
+const guessPin  = makePin('#d6453d');   // red = your guess
 
 // ---- DOM ----
 const verseText    = document.getElementById('verse-text');
@@ -156,12 +173,16 @@ let musicStep = 0;
 
 const STEP_MS = 200;          // sixteenth-ish; lively tempo
 const STEPS_PER_CHORD = 8;
-// Bright pop progression C - G - Am - F: a bass root + 3 arpeggio tones each
+// Longer pop progression C - G - Am - Em - F - C - F - G: bass + arpeggio tones
 const SONG = [
   { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [261.63, 329.63, 392.00] }, // C
   { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [293.66, 392.00, 493.88] }, // G
   { bass: 220.00, pad: [261.63, 329.63, 440.00], arp: [329.63, 440.00, 523.25] }, // Am
-  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }  // F
+  { bass: 164.81, pad: [246.94, 329.63, 392.00], arp: [329.63, 392.00, 493.88] }, // Em
+  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }, // F
+  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [392.00, 523.25, 659.25] }, // C (higher)
+  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }, // F
+  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [493.88, 587.33, 392.00] }  // G (turnaround)
 ];
 // up-down arpeggio pattern over the 3 chord tones
 const ARP_PATTERN = [0, 1, 2, 1, 0, 1, 2, 1];
@@ -245,8 +266,8 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 function scoreFor(distanceKm) {
-  // Stricter falloff: you really need to be close to score big
-  return Math.round(5000 * Math.exp(-distanceKm / 450));
+  // Even stricter falloff: precision really matters now
+  return Math.round(5000 * Math.exp(-distanceKm / 320));
 }
 
 // ---- Personal best ----
@@ -383,7 +404,7 @@ function startRound() {
 map.on('click', e => {
   if (locked) return;
   if (guessMarker) map.removeLayer(guessMarker);
-  guessMarker = L.marker(e.latlng).addTo(map);
+  guessMarker = L.marker(e.latlng, { icon: guessPin }).addTo(map);
   confirmBtn.disabled = false;
 });
 
@@ -397,7 +418,7 @@ function finishRound(g) {
   // reveal the labeled atlas map (places and names); hide the plain borders
   bibleLayer.addTo(map);
   if (bordersLayer && map.hasLayer(bordersLayer)) map.removeLayer(bordersLayer);
-  answerMarker = L.marker([current.lat, current.lon], { title: current.place })
+  answerMarker = L.marker([current.lat, current.lon], { title: current.place, icon: answerPin })
     .addTo(map)
     // permanent label so the place name floats right on the map pin
     .bindTooltip(current.place, {
@@ -513,10 +534,10 @@ function renderSummary() {
   roundScores.forEach((r, i) => {
     if (!r.answer) return;
     const a = [r.answer.lat, r.answer.lon];
-    const am = L.marker(a, { title: r.place })
+    const am = L.marker(a, { title: r.place, icon: answerPin })
       .addTo(map)
       .bindTooltip(`${i + 1}. ${r.place}`, {
-        permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip'
+        permanent: true, direction: 'top', offset: [0, -34], className: 'place-tooltip'
       })
       .openTooltip();
     summaryLayers.push(am);
@@ -524,9 +545,9 @@ function renderSummary() {
 
     if (r.guess) {
       const g = [r.guess.lat, r.guess.lon];
-      const gm = L.circleMarker(g, {
-        radius: 6, color: '#1f6feb', weight: 2, fillColor: '#1f6feb', fillOpacity: 0.85
-      }).addTo(map).bindTooltip(`Your guess ${i + 1}`, { direction: 'bottom' });
+      const gm = L.marker(g, { icon: guessPin })
+        .addTo(map)
+        .bindTooltip(`Your guess ${i + 1}`, { direction: 'bottom' });
       const ln = L.polyline([g, a], { color: '#8a5a2b', dashArray: '5 5', weight: 2 }).addTo(map);
       summaryLayers.push(gm, ln);
       pts.push(g);
@@ -558,7 +579,7 @@ async function endGame() {
     `<table class="rounds-table"><tbody>${breakdown}</tbody></table>` +
     `<p class="final-line">Total: <span class="points" id="final-score">0</span> / ${ROUNDS * 5000}</p>` +
     (prevBest > 0 ? `<p class="pb-line">Best: ${Math.max(prevBest, totalScore)}</p>` : '') +
-    `<p class="map-note">The map shows all your guesses (dots) and the answers (pins).</p>`;
+    `<p class="map-note">Map pins: <span class="guess-c">red = your guess</span>, <span class="answer-c">green = answer</span>.</p>`;
 
   // draw every guess + answer on the map
   renderSummary();

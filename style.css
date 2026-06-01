@@ -183,6 +183,11 @@ button:hover:not(:disabled) { background: #5e4622; }
 .rounds-table td:last-child { text-align: right; font-weight: bold; color: #2e6b3b; }
 .final-line { font-size: 1.1rem; }
 .map-note { font-size: 0.82rem; color: #8a7a5c; font-style: italic; }
+.map-note .guess-c { color: #d6453d; font-weight: bold; font-style: normal; }
+.map-note .answer-c { color: #2e8b57; font-weight: bold; font-style: normal; }
+
+/* Coloured map pins (divIcon, no default box) */
+.pin-icon { background: none; border: none; }
 
 /* ---- Place-name label on the revealed map pin ---- */
 .place-tooltip.leaflet-tooltip {
