@@ -183,8 +183,8 @@ button:hover:not(:disabled) { background: #5e4622; }
 .rounds-table td:last-child { text-align: right; font-weight: bold; color: #2e6b3b; }
 .final-line { font-size: 1.1rem; }
 .map-note { font-size: 0.82rem; color: #8a7a5c; font-style: italic; }
-.map-note .guess-c { color: #d6453d; font-weight: bold; font-style: normal; }
-.map-note .answer-c { color: #2e8b57; font-weight: bold; font-style: normal; }
+.guess-c { color: #d6453d; font-weight: bold; font-style: normal; }
+.answer-c { color: #2e8b57; font-weight: bold; font-style: normal; }
 
 /* Coloured map pins (divIcon, no default box) */
 .pin-icon { background: none; border: none; }
@@ -214,7 +214,7 @@ button.secondary {
 button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 
 /* ---- Floating buttons ---- */
-#lb-fab, #music-btn {
+#lb-fab, #music-btn, #confirm-fab {
   position: fixed;
   right: 16px;
   z-index: 500;
@@ -230,6 +230,16 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 }
 #lb-fab { bottom: 16px; }
 #music-btn { bottom: 78px; }
+/* confirm shares the bottom-right slot with the leaderboard (never both shown) */
+#confirm-fab {
+  bottom: 16px;
+  width: 62px;
+  height: 62px;
+  font-size: 2rem;
+  background: #2e8b57;
+}
+#confirm-fab:hover:not(:disabled) { background: #256f47; }
+#confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden { display: none; }
 
 /* ---- Version label ---- */
 #version {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -15,9 +15,10 @@
       <p class="tagline">Like GeoGuessr &mdash; but for the Bible.</p>
       <ol>
         <li>You'll see a <strong>verse</strong> describing a real event.</li>
-        <li><strong>Click the map</strong> where you think it happened.</li>
-        <li>Press <strong>Confirm</strong> before the timer runs out.</li>
+        <li><strong>Tap the map</strong> where you think it happened.</li>
+        <li>Tap the green <strong>&#10003;</strong> to lock it in before time runs out.</li>
         <li>The closer your guess, the more points &mdash; up to 5000.</li>
+        <li>On reveal: <span class="guess-c">red pin = your guess</span>, <span class="answer-c">green pin = the answer</span>.</li>
         <li>5 rounds. Beat your best total!</li>
       </ol>
       <p class="hint">A beep warns you in the last 5 seconds. Run out of time and it's 0 points!</p>
@@ -41,7 +42,8 @@
   </div>
 
   <!-- Floating buttons during play -->
-  <button id="lb-fab" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
+  <button id="confirm-fab" class="hidden" title="Confirm guess" aria-label="Confirm guess">&#10003;</button>
+  <button id="lb-fab" class="hidden" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
   <button id="music-btn" title="Music on/off" aria-label="Toggle music">&#9835;</button>
 
   <!-- Version indicator -->
@@ -66,7 +68,6 @@
     <section id="verse-panel">
       <p id="verse-text">Press Go to start.</p>
       <p id="verse-ref"></p>
-      <button id="confirm-btn" disabled>Confirm guess</button>
       <div id="result"></div>
       <button id="next-btn" class="hidden">Next round</button>
       <div id="leaderboard" class="hidden"></div>
@@ -76,6 +77,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=12"></script>
+  <script src="game.js?v=13"></script>
 </body>
 </html>

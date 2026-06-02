@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v12';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v13';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -76,7 +76,7 @@ const guessPin  = makePin('#d6453d');   // red = your guess
 // ---- DOM ----
 const verseText    = document.getElementById('verse-text');
 const verseRef     = document.getElementById('verse-ref');
-const confirmBtn   = document.getElementById('confirm-btn');
+const confirmBtn   = document.getElementById('confirm-fab');
 const nextBtn      = document.getElementById('next-btn');
 const resultBox    = document.getElementById('result');
 const roundLabel   = document.getElementById('round-label');
@@ -383,7 +383,8 @@ function startRound() {
   resultBox.innerHTML = '';
   leaderboard.classList.add('hidden');
   confirmBtn.disabled = true;
-  confirmBtn.classList.remove('hidden');
+  confirmBtn.classList.add('hidden');         // shows once a guess is placed
+  if (lbFab) lbFab.classList.add('hidden');   // hide leaderboard during play
   nextBtn.classList.add('hidden');
 
   roundLabel.textContent = `Round ${roundIndex + 1} / ${ROUNDS}`;
@@ -406,6 +407,7 @@ map.on('click', e => {
   if (guessMarker) map.removeLayer(guessMarker);
   guessMarker = L.marker(e.latlng, { icon: guessPin }).addTo(map);
   confirmBtn.disabled = false;
+  confirmBtn.classList.remove('hidden');
 });
 
 function finishRound(g) {
@@ -560,6 +562,8 @@ function renderSummary() {
 async function endGame() {
   stopTimer();
   clearAuto();
+  confirmBtn.classList.add('hidden');
+  if (lbFab) lbFab.classList.remove('hidden');   // leaderboard available again
   // reset the clock to empty
   if (clockNum) clockNum.textContent = '0';
   if (clockFg) clockFg.style.strokeDashoffset = CLOCK_CIRC;
