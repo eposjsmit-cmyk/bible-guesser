@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v18';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v19';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -441,18 +441,18 @@ function finishRound(g) {
   bibleLayer.addTo(map);
   if (bordersLayer && map.hasLayer(bordersLayer)) map.removeLayer(bordersLayer);
   const fact = FACTS[current.ref] || '';
-  const popupFact = fact ? `<br><span class="popup-fact">${fact}</span>` : '';
+  // small note floats in the label above the answer pin
+  const tipHtml = `<span class="pt-place">${current.place}</span>` +
+                  (fact ? `<span class="pt-fact">${fact}</span>` : '');
   answerMarker = L.marker([current.lat, current.lon], { title: current.place, icon: answerPin })
     .addTo(map)
-    // permanent label so the place name floats right on the map pin
-    .bindTooltip(current.place, {
-      permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip'
+    .bindTooltip(tipHtml, {
+      permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip reveal-tip'
     })
-    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>${popupFact}`);
+    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>`);
   answerMarker.openTooltip();
 
   const eraLine = `<p class="era">When: <strong>${current.era}</strong></p>`;
-  const factLine = fact ? `<p class="fact">&#128220; ${fact}</p>` : '';
 
   if (g) {
     const distance = haversine(g.lat, g.lng, current.lat, current.lon);
@@ -465,16 +465,14 @@ function finishRound(g) {
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
       eraLine +
       `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
-      `<p>+<span class="points" id="round-points">0</span> points</p>` +
-      factLine;
+      `<p>+<span class="points" id="round-points">0</span> points</p>`;
   } else {
     map.setView([current.lat, current.lon], 6);
     resultBox.innerHTML =
       `<p><strong>Time's up!</strong> No guess placed.</p>` +
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
       eraLine +
-      `<p>+<span class="points" id="round-points">0</span> points</p>` +
-      factLine;
+      `<p>+<span class="points" id="round-points">0</span> points</p>`;
   }
 
   sfxReveal(points);

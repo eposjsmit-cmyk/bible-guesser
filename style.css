@@ -166,17 +166,22 @@ button:hover:not(:disabled) { background: #5e4622; }
 .pb-line { color: #6b5d45; }
 #result .era { color: #6b5d45; }
 #result .era strong { color: #3b2f1e; }
-#result .fact {
-  font-size: 0.9rem;
-  line-height: 1.45;
-  color: #4a4030;
-  background: #f3ecdc;
-  border-left: 3px solid #b8860b;
-  border-radius: 4px;
-  padding: 0.5rem 0.7rem;
-  margin-top: 0.6rem;
+/* fact shown in the label above the answer pin */
+.place-tooltip.reveal-tip {
+  white-space: normal;
+  max-width: 210px;
+  text-align: center;
 }
-.popup-fact { display: block; margin-top: 4px; color: #5e4622; font-style: italic; }
+.pt-place { display: block; font-weight: bold; }
+.pt-fact {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.7rem;
+  font-weight: normal;
+  font-style: italic;
+  line-height: 1.3;
+  color: #5e4622;
+}
 
 /* ---- Per-round breakdown on the results screen ---- */
 .rounds-title { margin: 0 0 0.4rem; color: #3b2f1e; font-size: 1.05rem; }
