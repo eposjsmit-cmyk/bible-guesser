@@ -404,6 +404,10 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   .name-row input { font-size: 1rem; }
   #go-btn { width: 100%; padding: 0.85rem; font-size: 1.1rem; }
 
+  /* wider fact label above the pin on phones */
+  .place-tooltip.reveal-tip { max-width: 280px; }
+  .pt-fact { font-size: 0.74rem; }
+
   /* ---- Results screen: use the resize button to change the split ---- */
   body.results #verse-panel { transition: max-height 0.25s ease; }
   body.results.layout-half   #verse-panel { max-height: 50vh; }
