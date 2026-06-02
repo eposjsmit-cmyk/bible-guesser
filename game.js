@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v14';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v15';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -13,7 +13,9 @@ let deck = [];
 let roundIndex = 0;
 let totalScore = 0;
 let roundScores = [];   // {place, points, guess, answer} per round, for the recap
-let summaryLayers = []; // map layers drawn on the end-of-game recap
+let summaryLayers = []; // all map layers drawn on the end-of-game recap
+let summaryGuessLayers = []; // just the guess pins + lines (hidden in map-focus)
+let resultsActive = false;   // true while the final results screen is showing
 let current = null;
 let guessMarker = null;
 let answerMarker = null;
@@ -77,7 +79,9 @@ const guessPin  = makePin('#d6453d');   // red = your guess
 const verseText    = document.getElementById('verse-text');
 const verseRef     = document.getElementById('verse-ref');
 const confirmBtn   = document.getElementById('confirm-fab');
-const nextBtn      = document.getElementById('next-btn');
+const nextBtn      = document.getElementById('next-fab');
+const nextBadge    = nextBtn.querySelector('.fab-badge');
+const versePanel   = document.getElementById('verse-panel');
 const resultBox    = document.getElementById('result');
 const roundLabel   = document.getElementById('round-label');
 const scoreLabel   = document.getElementById('score-label');
@@ -386,6 +390,11 @@ function startRound() {
   confirmBtn.classList.add('hidden');         // shows once a guess is placed
   if (lbFab) lbFab.classList.add('hidden');   // hide leaderboard during play
   nextBtn.classList.add('hidden');
+  nextBtn.classList.remove('restart');
+
+  // leave the results layout
+  resultsActive = false;
+  document.body.classList.remove('results', 'layout-half', 'layout-results', 'layout-map');
 
   roundLabel.textContent = `Round ${roundIndex + 1} / ${ROUNDS}`;
   scoreLabel.textContent = `Score: ${totalScore}`;
@@ -468,24 +477,22 @@ function finishRound(g) {
   const rp = document.getElementById('round-points');
   if (rp) animateCount(rp, 0, points, '', 700);
 
-  nextBtn.classList.remove('hidden');
   confirmBtn.classList.add('hidden');
 
   startAutoAdvance();
 }
 
-// Auto-advance to the next screen after a short pause, with a countdown on
-// the button. The player can also tap the button to skip the wait.
+// Auto-advance to the next screen after a short pause, with a countdown badge
+// on the Next button. The player can also tap the button to skip the wait.
 function startAutoAdvance() {
   clearAuto();
-  const isLast = roundIndex >= ROUNDS - 1;
-  const label = isLast ? 'See results' : 'Next round';
+  nextBtn.classList.remove('restart', 'hidden');
   let remaining = BETWEEN_SECONDS;
-  nextBtn.textContent = `${label} (${remaining})`;
+  nextBadge.textContent = remaining;
   autoId = setInterval(() => {
     remaining--;
     if (remaining <= 0) advance();
-    else nextBtn.textContent = `${label} (${remaining})`;
+    else nextBadge.textContent = remaining;
   }, 1000);
 }
 
@@ -511,9 +518,7 @@ confirmBtn.addEventListener('click', () => {
 });
 
 nextBtn.onclick = () => {
-  if (nextBtn.dataset.mode === 'restart') {
-    nextBtn.textContent = 'Next round';
-    delete nextBtn.dataset.mode;
+  if (nextBtn.classList.contains('restart')) {
     newGame();
     return;
   }
@@ -523,6 +528,7 @@ nextBtn.onclick = () => {
 function clearSummary() {
   summaryLayers.forEach(l => { if (map.hasLayer(l)) map.removeLayer(l); });
   summaryLayers = [];
+  summaryGuessLayers = [];
 }
 
 // Draw every round's guess (dot) and answer (pin + place name) on one map
@@ -552,12 +558,40 @@ function renderSummary() {
         .bindTooltip(`Your guess ${i + 1}`, { direction: 'bottom' });
       const ln = L.polyline([g, a], { color: '#8a5a2b', dashArray: '5 5', weight: 2 }).addTo(map);
       summaryLayers.push(gm, ln);
+      summaryGuessLayers.push(gm, ln);
       pts.push(g);
     }
   });
 
   if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.2));
 }
+
+// Results screen: resize between panel-focus, map-focus, or half/half.
+// In map-focus the guess pins/lines hide for a clean view of the places.
+function setLayout(mode) {
+  document.body.classList.remove('layout-half', 'layout-results', 'layout-map');
+  document.body.classList.add('layout-' + mode);
+
+  const showGuesses = mode !== 'map';
+  summaryGuessLayers.forEach(l => {
+    if (showGuesses) { if (!map.hasLayer(l)) l.addTo(map); }
+    else if (map.hasLayer(l)) map.removeLayer(l);
+  });
+
+  // let the CSS height transition finish, then refit the map tiles
+  setTimeout(() => map.invalidateSize(), 280);
+}
+
+// tap the results panel to grow/shrink the text (phones only)
+versePanel.addEventListener('click', () => {
+  if (!resultsActive || window.innerWidth > 700) return;
+  setLayout(document.body.classList.contains('layout-results') ? 'half' : 'results');
+});
+// tap the map (on results) to open it full / back to half (phones only)
+map.on('click', () => {
+  if (!resultsActive || window.innerWidth > 700) return;
+  setLayout(document.body.classList.contains('layout-map') ? 'half' : 'map');
+});
 
 async function endGame() {
   stopTimer();
@@ -588,14 +622,19 @@ async function endGame() {
   // draw every guess + answer on the map
   renderSummary();
 
+  // enable the tap-to-resize results layout (starts half/half)
+  resultsActive = true;
+  document.body.classList.add('results');
+  setLayout('half');
+
   const fs = document.getElementById('final-score');
   if (fs) animateCount(fs, 0, totalScore, '', 1000);
 
   // gentle closing flourish after the count-up settles
   setTimeout(() => sfxGameOver(), 1050);
 
-  nextBtn.textContent = 'Play again';
-  nextBtn.dataset.mode = 'restart';
+  // Next button becomes a "play again" restart icon
+  nextBtn.classList.add('restart');
   nextBtn.classList.remove('hidden');
 
   // submit then show leaderboard

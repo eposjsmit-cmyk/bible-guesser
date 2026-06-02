@@ -214,7 +214,7 @@ button.secondary {
 button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 
 /* ---- Floating buttons ---- */
-#lb-fab, #music-btn, #confirm-fab {
+#lb-fab, #music-btn, #confirm-fab, #next-fab {
   position: fixed;
   right: 16px;
   z-index: 500;
@@ -228,11 +228,12 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   align-items: center;
   justify-content: center;
 }
-/* music sits at the bottom; confirm / leaderboard share the slot above it */
+/* music sits at the bottom; the action button + leaderboard stack above it */
 #music-btn { bottom: 16px; }
-#lb-fab { bottom: 84px; }
+#lb-fab { bottom: 152px; }
+/* confirm and next share the action slot above music (never both shown) */
+#confirm-fab, #next-fab { bottom: 84px; }
 #confirm-fab {
-  bottom: 84px;
   width: 64px;
   height: 64px;
   background: radial-gradient(circle at 35% 30%, #efd98c, #c69a2e 55%, #9c7414);
@@ -243,7 +244,32 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 }
 #confirm-fab svg { display: block; }
 #confirm-fab:hover:not(:disabled) { filter: brightness(1.08); }
-#confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden { display: none; }
+
+#next-fab { background: #7a5c2e; }
+#next-fab .ic svg { display: block; }
+#next-fab .ic-restart { display: none; }
+#next-fab.restart .ic-next { display: none; }
+#next-fab.restart .ic-restart { display: block; }
+#next-fab.restart .fab-badge { display: none; }
+.fab-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  background: #d6453d;
+  color: #fff;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+#confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden, #next-fab.hidden { display: none; }
 
 /* ---- Version label ---- */
 #version {
@@ -359,4 +385,17 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   .overlay-card .hint { font-size: 0.8rem; }
   .name-row input { font-size: 1rem; }
   #go-btn { width: 100%; padding: 0.85rem; font-size: 1.1rem; }
+
+  /* ---- Results screen: tap the panel or map to resize ---- */
+  body.results #verse-panel { transition: max-height 0.25s ease; cursor: pointer; }
+  body.results #map { cursor: pointer; }
+  body.results.layout-half   #verse-panel { max-height: 50vh; }
+  body.results.layout-results #verse-panel { max-height: 82vh; }
+  body.results.layout-map     #verse-panel {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    overflow: hidden;
+  }
 }

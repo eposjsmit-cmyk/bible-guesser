@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -47,6 +47,20 @@
       <path d="M9 25 L20 35 L40 11" fill="none" stroke="#3b2f1e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </button>
+  <button id="next-fab" class="hidden" title="Next" aria-label="Next">
+    <span class="ic ic-next">
+      <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true">
+        <path d="M9 24 H33 M25 13 L37 24 L25 35" fill="none" stroke="#fbf8f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="ic ic-restart">
+      <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true">
+        <path d="M37 14 A16 16 0 1 0 40 26" fill="none" stroke="#fbf8f1" stroke-width="5" stroke-linecap="round"/>
+        <path d="M37 4 L38.5 15 L27 14" fill="none" stroke="#fbf8f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="fab-badge"></span>
+  </button>
   <button id="lb-fab" class="hidden" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
   <button id="music-btn" title="Music on/off" aria-label="Toggle music">&#9835;</button>
 
@@ -73,7 +87,6 @@
       <p id="verse-text">Press Go to start.</p>
       <p id="verse-ref"></p>
       <div id="result"></div>
-      <button id="next-btn" class="hidden">Next round</button>
       <div id="leaderboard" class="hidden"></div>
     </section>
 
@@ -81,6 +94,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=14"></script>
+  <script src="game.js?v=15"></script>
 </body>
 </html>
