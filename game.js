@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v16';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v17';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -572,17 +572,10 @@ function renderSummary() {
 }
 
 // Results screen: resize between panel-focus, map-focus, or half/half.
-// In map-focus the guess pins/lines hide for a clean view of the places.
+// Both the red (guess) and green (answer) pins stay visible in every mode.
 function setLayout(mode) {
   document.body.classList.remove('layout-half', 'layout-results', 'layout-map');
   document.body.classList.add('layout-' + mode);
-
-  const showGuesses = mode !== 'map';
-  summaryGuessLayers.forEach(l => {
-    if (showGuesses) { if (!map.hasLayer(l)) l.addTo(map); }
-    else if (map.hasLayer(l)) map.removeLayer(l);
-  });
-
   // let the CSS height transition finish, then refit the map tiles
   setTimeout(() => map.invalidateSize(), 280);
 }
