@@ -214,7 +214,7 @@ button.secondary {
 button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 
 /* ---- Floating buttons ---- */
-#lb-fab, #music-btn, #confirm-fab, #next-fab {
+#lb-fab, #music-btn, #confirm-fab, #next-fab, #resize-fab {
   position: fixed;
   right: 16px;
   z-index: 500;
@@ -231,6 +231,8 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
 /* music sits at the bottom; the action button + leaderboard stack above it */
 #music-btn { bottom: 16px; }
 #lb-fab { bottom: 152px; }
+#resize-fab { bottom: 220px; background: #7a5c2e; }
+#resize-fab svg { display: block; }
 /* confirm and next share the action slot above music (never both shown) */
 #confirm-fab, #next-fab { bottom: 84px; }
 #confirm-fab {
@@ -269,7 +271,7 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-#confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden, #next-fab.hidden { display: none; }
+#confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden, #next-fab.hidden, #resize-fab.hidden { display: none; }
 
 /* ---- Version label ---- */
 #version {
@@ -386,9 +388,8 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   .name-row input { font-size: 1rem; }
   #go-btn { width: 100%; padding: 0.85rem; font-size: 1.1rem; }
 
-  /* ---- Results screen: tap the panel or map to resize ---- */
-  body.results #verse-panel { transition: max-height 0.25s ease; cursor: pointer; }
-  body.results #map { cursor: pointer; }
+  /* ---- Results screen: use the resize button to change the split ---- */
+  body.results #verse-panel { transition: max-height 0.25s ease; }
   body.results.layout-half   #verse-panel { max-height: 50vh; }
   body.results.layout-results #verse-panel { max-height: 82vh; }
   body.results.layout-map     #verse-panel {
@@ -399,3 +400,6 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
     overflow: hidden;
   }
 }
+
+/* resize control is a phone-only feature */
+@media (min-width: 701px) { #resize-fab { display: none !important; } }

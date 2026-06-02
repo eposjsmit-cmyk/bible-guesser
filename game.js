@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v15';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v16';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -95,6 +95,7 @@ const leaderboard  = document.getElementById('leaderboard');
 const lbModal      = document.getElementById('lb-modal');
 const lbModalBody  = document.getElementById('lb-modal-body');
 const lbFab        = document.getElementById('lb-fab');
+const resizeFab    = document.getElementById('resize-fab');
 const lbCloseBtn   = document.getElementById('lb-close');
 const lbOpenStart  = document.getElementById('lb-open-start');
 const musicBtn     = document.getElementById('music-btn');
@@ -394,6 +395,7 @@ function startRound() {
 
   // leave the results layout
   resultsActive = false;
+  if (resizeFab) resizeFab.classList.add('hidden');
   document.body.classList.remove('results', 'layout-half', 'layout-results', 'layout-map');
 
   roundLabel.textContent = `Round ${roundIndex + 1} / ${ROUNDS}`;
@@ -408,6 +410,9 @@ function startRound() {
   if (bordersLayer && !map.hasLayer(bordersLayer)) bordersLayer.addTo(map);
 
   map.setView([31.5, 35.5], 5);
+  // the panel/map split may have just changed (e.g. coming back from results);
+  // let the layout settle then tell Leaflet to recompute its size
+  setTimeout(() => map.invalidateSize(), 60);
   startTimer();
 }
 
@@ -582,15 +587,13 @@ function setLayout(mode) {
   setTimeout(() => map.invalidateSize(), 280);
 }
 
-// tap the results panel to grow/shrink the text (phones only)
-versePanel.addEventListener('click', () => {
-  if (!resultsActive || window.innerWidth > 700) return;
-  setLayout(document.body.classList.contains('layout-results') ? 'half' : 'results');
-});
-// tap the map (on results) to open it full / back to half (phones only)
-map.on('click', () => {
-  if (!resultsActive || window.innerWidth > 700) return;
-  setLayout(document.body.classList.contains('layout-map') ? 'half' : 'map');
+// Resize button cycles the split: half -> results-big -> map-big -> half
+const LAYOUT_CYCLE = ['half', 'results', 'map'];
+if (resizeFab) resizeFab.addEventListener('click', () => {
+  if (!resultsActive) return;
+  const cur = LAYOUT_CYCLE.findIndex(m => document.body.classList.contains('layout-' + m));
+  const next = LAYOUT_CYCLE[(cur + 1) % LAYOUT_CYCLE.length];
+  setLayout(next);
 });
 
 async function endGame() {
@@ -622,9 +625,10 @@ async function endGame() {
   // draw every guess + answer on the map
   renderSummary();
 
-  // enable the tap-to-resize results layout (starts half/half)
+  // enable the results layout (starts half/half); resize button cycles it
   resultsActive = true;
   document.body.classList.add('results');
+  if (resizeFab) resizeFab.classList.remove('hidden');
   setLayout('half');
 
   const fs = document.getElementById('final-score');

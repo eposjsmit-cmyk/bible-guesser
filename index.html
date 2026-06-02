@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=15" />
+  <link rel="stylesheet" href="style.css?v=16" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -61,6 +61,12 @@
     </span>
     <span class="fab-badge"></span>
   </button>
+  <button id="resize-fab" class="hidden" title="Resize view" aria-label="Resize view">
+    <svg viewBox="0 0 48 48" width="28" height="28" aria-hidden="true">
+      <path d="M16 19 L24 11 L32 19" fill="none" stroke="#fbf8f1" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 29 L24 37 L32 29" fill="none" stroke="#fbf8f1" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
   <button id="lb-fab" class="hidden" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
   <button id="music-btn" title="Music on/off" aria-label="Toggle music">&#9835;</button>
 
@@ -94,6 +100,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=15"></script>
+  <script src="game.js?v=16"></script>
 </body>
 </html>
