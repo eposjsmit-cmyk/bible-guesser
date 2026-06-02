@@ -952,5 +952,113 @@
     "era": "c. AD 57",
     "lat": 36.4349,
     "lon": 28.2176
+  },
+  {
+    "ref": "Matthew 5:1-2",
+    "text": "And seeing the multitudes, he went up into a mountain... and he opened his mouth, and taught them, saying, Blessed are the poor in spirit: for theirs is the kingdom of heaven.",
+    "event": "The Sermon on the Mount",
+    "place": "Mount of Beatitudes",
+    "era": "c. AD 28",
+    "lat": 32.8807,
+    "lon": 35.556
+  },
+  {
+    "ref": "Matthew 14:25",
+    "text": "And in the fourth watch of the night Jesus went unto them, walking on the sea.",
+    "event": "Jesus walks on the water",
+    "place": "Sea of Galilee",
+    "era": "c. AD 29",
+    "lat": 32.8,
+    "lon": 35.59
+  },
+  {
+    "ref": "1 Samuel 5:10",
+    "text": "Therefore they sent the ark of God to Ekron. And it came to pass, as the ark of God came to Ekron, that the Ekronites cried out.",
+    "event": "The ark sent away in fear",
+    "place": "Ekron",
+    "era": "c. 1080 BC",
+    "lat": 31.7783,
+    "lon": 34.8514
+  },
+  {
+    "ref": "1 Samuel 21:13",
+    "text": "And he changed his behaviour before them, and feigned himself mad in their hands, and scrabbled on the doors of the gate.",
+    "event": "David feigns madness before Achish",
+    "place": "Gath",
+    "era": "c. 1013 BC",
+    "lat": 31.6997,
+    "lon": 34.8481
+  },
+  {
+    "ref": "1 Samuel 22:1-2",
+    "text": "David therefore departed thence, and escaped to the cave Adullam... and every one that was in distress... gathered themselves unto him; and he became a captain over them.",
+    "event": "David's men gather at the cave",
+    "place": "Cave of Adullam",
+    "era": "c. 1012 BC",
+    "lat": 31.6486,
+    "lon": 34.9569
+  },
+  {
+    "ref": "1 Kings 19:19",
+    "text": "So he departed thence, and found Elisha the son of Shaphat, who was plowing... and Elijah passed by him, and cast his mantle upon him.",
+    "event": "Elijah calls Elisha",
+    "place": "Abel-meholah",
+    "era": "c. 860 BC",
+    "lat": 32.36,
+    "lon": 35.52
+  },
+  {
+    "ref": "1 Kings 9:26",
+    "text": "And king Solomon made a navy of ships in Eziongeber, which is beside Eloth, on the shore of the Red sea, in the land of Edom.",
+    "event": "Solomon builds a fleet",
+    "place": "Ezion-geber",
+    "era": "c. 945 BC",
+    "lat": 29.55,
+    "lon": 34.97
+  },
+  {
+    "ref": "2 Kings 5:14",
+    "text": "Then went he down, and dipped himself seven times in Jordan... and his flesh came again like unto the flesh of a little child, and he was clean.",
+    "event": "Naaman healed of leprosy",
+    "place": "The Jordan River",
+    "era": "c. 850 BC",
+    "lat": 32.31,
+    "lon": 35.57
+  },
+  {
+    "ref": "Numbers 22:28",
+    "text": "And the LORD opened the mouth of the ass, and she said unto Balaam, What have I done unto thee, that thou hast smitten me these three times?",
+    "event": "Balaam's donkey speaks",
+    "place": "Plains of Moab",
+    "era": "c. 1406 BC",
+    "lat": 31.78,
+    "lon": 35.72
+  },
+  {
+    "ref": "Matthew 21:7-9",
+    "text": "And brought the ass, and the colt... and they set him thereon. And a very great multitude... cried, saying, Hosanna to the Son of David.",
+    "event": "The Triumphal Entry",
+    "place": "Bethphage",
+    "era": "c. AD 30",
+    "lat": 31.7766,
+    "lon": 35.254
+  },
+  {
+    "ref": "Judges 14:1",
+    "text": "And Samson went down to Timnath, and saw a woman in Timnath of the daughters of the Philistines.",
+    "event": "Samson's riddle and wedding",
+    "place": "Timnah",
+    "era": "c. 1100 BC",
+    "lat": 31.7706,
+    "lon": 34.9756
+  },
+  {
+    "ref": "Luke 8:2",
+    "text": "And certain women, which had been healed of evil spirits and infirmities, Mary called Magdalene, out of whom went seven devils.",
+    "event": "Mary Magdalene follows Jesus",
+    "place": "Magdala",
+    "era": "c. AD 28",
+    "lat": 32.8267,
+    "lon": 35.5172
   }
 ]

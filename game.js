@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v17';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v18';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
@@ -9,6 +9,7 @@ const SUPA_URL = 'https://fineilshrveswglykogx.supabase.co';
 const SUPA_KEY = 'sb_publishable_6B6BmSvCDNNtRsg8DzSzrw_gD-U6oV7';
 
 let verses = [];
+let FACTS = {};         // ref -> fun fact / historical note
 let deck = [];
 let roundIndex = 0;
 let totalScore = 0;
@@ -178,19 +179,20 @@ let musicStep = 0;
 
 const STEP_MS = 200;          // sixteenth-ish; lively tempo
 const STEPS_PER_CHORD = 8;
-// Longer pop progression C - G - Am - Em - F - C - F - G: bass + arpeggio tones
+// Progression C - G - Am - Em - F - C - F - G, each chord with a bass note,
+// a soft pad, a 4-note rolling arpeggio, and a singing top melody (mel/mel2).
 const SONG = [
-  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [261.63, 329.63, 392.00] }, // C
-  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [293.66, 392.00, 493.88] }, // G
-  { bass: 220.00, pad: [261.63, 329.63, 440.00], arp: [329.63, 440.00, 523.25] }, // Am
-  { bass: 164.81, pad: [246.94, 329.63, 392.00], arp: [329.63, 392.00, 493.88] }, // Em
-  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }, // F
-  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [392.00, 523.25, 659.25] }, // C (higher)
-  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25] }, // F
-  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [493.88, 587.33, 392.00] }  // G (turnaround)
+  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [261.63, 329.63, 392.00, 523.25], mel: 523.25, mel2: 659.25 }, // C
+  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [293.66, 392.00, 493.88, 587.33], mel: 493.88, mel2: 587.33 }, // G
+  { bass: 220.00, pad: [261.63, 329.63, 440.00], arp: [329.63, 440.00, 523.25, 659.25], mel: 523.25, mel2: 659.25 }, // Am
+  { bass: 164.81, pad: [246.94, 329.63, 392.00], arp: [329.63, 392.00, 493.88, 659.25], mel: 493.88, mel2: 587.33 }, // Em
+  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25, 698.46], mel: 523.25, mel2: 698.46 }, // F
+  { bass: 130.81, pad: [261.63, 329.63, 392.00], arp: [392.00, 523.25, 659.25, 783.99], mel: 659.25, mel2: 783.99 }, // C (high)
+  { bass: 174.61, pad: [261.63, 349.23, 440.00], arp: [349.23, 440.00, 523.25, 698.46], mel: 587.33, mel2: 523.25 }, // F
+  { bass: 196.00, pad: [246.94, 293.66, 392.00], arp: [293.66, 392.00, 493.88, 587.33], mel: 587.33, mel2: 493.88 }  // G (turnaround)
 ];
-// up-down arpeggio pattern over the 3 chord tones
-const ARP_PATTERN = [0, 1, 2, 1, 0, 1, 2, 1];
+// flowing up-and-down arpeggio over the 4 chord tones
+const ARP_PATTERN = [0, 1, 2, 3, 2, 3, 1, 2];
 
 function tone(freq, dur, type, vol, attack = 0.02) {
   if (!audioCtx || !musicBus) return;
@@ -214,11 +216,15 @@ function musicTick() {
   const stepInChord = musicStep % STEPS_PER_CHORD;
 
   if (stepInChord === 0) {
-    tone(chord.bass, 0.65, 'triangle', 0.55);                 // bouncy bass on the beat
-    chord.pad.forEach(f => tone(f, 1.5, 'sine', 0.12, 0.25)); // soft sustained pad
+    tone(chord.bass, 0.7, 'triangle', 0.5);                   // bass on the beat
+    chord.pad.forEach(f => tone(f, 2.0, 'sine', 0.1, 0.4));   // soft, slow pad swell
+    if (chord.mel) tone(chord.mel, 1.7, 'triangle', 0.16, 0.12);  // singing melody
   }
-  // plucky arpeggio melody on every step
-  tone(chord.arp[ARP_PATTERN[stepInChord]], 0.16, 'triangle', 0.34);
+  if (stepInChord === 4 && chord.mel2) {
+    tone(chord.mel2, 1.2, 'triangle', 0.14, 0.1);             // melody moves mid-bar
+  }
+  // gentle plucked arpeggio on every step
+  tone(chord.arp[ARP_PATTERN[stepInChord]], 0.18, 'triangle', 0.28);
 
   musicStep = (musicStep + 1) % (STEPS_PER_CHORD * SONG.length);
 }
@@ -434,16 +440,19 @@ function finishRound(g) {
   // reveal the labeled atlas map (places and names); hide the plain borders
   bibleLayer.addTo(map);
   if (bordersLayer && map.hasLayer(bordersLayer)) map.removeLayer(bordersLayer);
+  const fact = FACTS[current.ref] || '';
+  const popupFact = fact ? `<br><span class="popup-fact">${fact}</span>` : '';
   answerMarker = L.marker([current.lat, current.lon], { title: current.place, icon: answerPin })
     .addTo(map)
     // permanent label so the place name floats right on the map pin
     .bindTooltip(current.place, {
       permanent: true, direction: 'top', offset: [0, -8], className: 'place-tooltip'
     })
-    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>`);
+    .bindPopup(`<b>${current.place}</b><br>${current.event}<br><i>${current.era}</i>${popupFact}`);
   answerMarker.openTooltip();
 
   const eraLine = `<p class="era">When: <strong>${current.era}</strong></p>`;
+  const factLine = fact ? `<p class="fact">&#128220; ${fact}</p>` : '';
 
   if (g) {
     const distance = haversine(g.lat, g.lng, current.lat, current.lon);
@@ -456,14 +465,16 @@ function finishRound(g) {
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
       eraLine +
       `<p>You were <span class="dist">${distance.toFixed(0)} km</span> away.</p>` +
-      `<p>+<span class="points" id="round-points">0</span> points</p>`;
+      `<p>+<span class="points" id="round-points">0</span> points</p>` +
+      factLine;
   } else {
     map.setView([current.lat, current.lon], 6);
     resultBox.innerHTML =
       `<p><strong>Time's up!</strong> No guess placed.</p>` +
       `<p><span class="place">${current.place}</span> &mdash; ${current.event}</p>` +
       eraLine +
-      `<p>+<span class="points" id="round-points">0</span> points</p>`;
+      `<p>+<span class="points" id="round-points">0</span> points</p>` +
+      factLine;
   }
 
   sfxReveal(points);
@@ -721,3 +732,9 @@ fetch('verses.json')
   .catch(() => {
     goBtn.textContent = 'Failed to load verses';
   });
+
+// ---- Load fun facts (optional; shown on reveal) ----
+fetch('facts.json')
+  .then(r => r.json())
+  .then(data => { FACTS = data || {}; })
+  .catch(() => { FACTS = {}; });
