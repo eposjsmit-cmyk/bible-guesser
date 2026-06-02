@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Guesser</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
 </head>
 <body>
   <!-- Start screen with instructions -->
@@ -42,7 +42,11 @@
   </div>
 
   <!-- Floating buttons during play -->
-  <button id="confirm-fab" class="hidden" title="Confirm guess" aria-label="Confirm guess">&#10003;</button>
+  <button id="confirm-fab" class="hidden" title="Confirm guess" aria-label="Confirm guess">
+    <svg viewBox="0 0 48 48" width="32" height="32" aria-hidden="true">
+      <path d="M9 25 L20 35 L40 11" fill="none" stroke="#3b2f1e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
   <button id="lb-fab" class="hidden" title="Leaderboard" aria-label="Leaderboard">&#127942;</button>
   <button id="music-btn" title="Music on/off" aria-label="Toggle music">&#9835;</button>
 
@@ -77,6 +81,6 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="game.js?v=13"></script>
+  <script src="game.js?v=14"></script>
 </body>
 </html>

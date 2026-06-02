@@ -228,17 +228,21 @@ button.secondary:hover:not(:disabled) { background: #f0e8d0; color: #5e4622; }
   align-items: center;
   justify-content: center;
 }
-#lb-fab { bottom: 16px; }
-#music-btn { bottom: 78px; }
-/* confirm shares the bottom-right slot with the leaderboard (never both shown) */
+/* music sits at the bottom; confirm / leaderboard share the slot above it */
+#music-btn { bottom: 16px; }
+#lb-fab { bottom: 84px; }
 #confirm-fab {
-  bottom: 16px;
-  width: 62px;
-  height: 62px;
-  font-size: 2rem;
-  background: #2e8b57;
+  bottom: 84px;
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle at 35% 30%, #efd98c, #c69a2e 55%, #9c7414);
+  border: 3px solid #5e4622;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4),
+              inset 0 2px 5px rgba(255, 255, 255, 0.5),
+              inset 0 -3px 7px rgba(0, 0, 0, 0.3);
 }
-#confirm-fab:hover:not(:disabled) { background: #256f47; }
+#confirm-fab svg { display: block; }
+#confirm-fab:hover:not(:disabled) { filter: brightness(1.08); }
 #confirm-fab.hidden, #lb-fab.hidden, #music-btn.hidden { display: none; }
 
 /* ---- Version label ---- */

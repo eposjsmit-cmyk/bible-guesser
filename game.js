@@ -1,6 +1,6 @@
 // Bible Guesser - game logic
 
-const GAME_VERSION = 'v13';   // shown at bottom of screen so you can confirm what's loaded
+const GAME_VERSION = 'v14';   // shown at bottom of screen so you can confirm what's loaded
 
 const ROUNDS = 5;
 const ROUND_SECONDS = 30;
